@@ -6,6 +6,7 @@
 .modules-section{
     background-color: darkgrey;
     border-radius: 4px;
+    padding: 8px;
 }
 
 #data-select{
@@ -22,3 +23,4 @@
 #menu{
     margin: 0px;
 }
+

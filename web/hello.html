@@ -57,20 +57,76 @@
                   <div class="col">
                     <label for="modules">Modules</label>
                     <div class="form-group" id="modules">
-                        <div class="form-row modules-section" id="prescreening">
-                            <div class="form-check">
+                      
+                        <label class="text-center" for="prescreening">Prescreening</label>
+                        <div class="row modules-section" id="prescreening">
+                          <div class="col">
+                            <div class="row">
+                              <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                                 <label class="form-check-label" for="flexCheckDefault">
                                   Prescreen
                                 </label>
+                              </div>
                             </div>
 
+                            <div class="row">
+                              <select>
+                                <option value="0.25" selected>0.25</option>
+                                <option value="0.50">0.50</option>
+                                <option value="0.75">0.75</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col ">
+                            <div class="row">
+                              <select class="form-select" multiple aria-label="multiple select example">
+                                <option selected>MPG Sept 2005</option>
+                                <option value="1">Small Millbrook</option>
+                                <option value="2">Tiny Millbrook</option>
+                              </select>
+                            </div>
 
-
+                            <div class="row">
+                              <select>
+                                <option selected>none</option>
+                                <option>x</option>
+                                <option>y</option>
+                                <option>z</option>
+                              </select>
+                            </div>
+                          </div>
                         </div>
 
-                        <div class="form-row modules-section" id="feature-extraction">
+
+
+
+                        <label class="text-center" for="feature-extraction">Feature Extraction</label>
+                        <div class="row modules-section" id="feature-extraction">
+                          <div class="col">
+                            <div class="row">
+                              <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                  Extract Features
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col ">
+                            <div class="row">
+                              <select class="form-select" multiple aria-label="multiple select example">
+                                <option selected>Bounce</option>
+                                <option value="1">KSum</option>
+                                <option value="2">Signature</option>
+                              </select>
+                            </div>
+                          </div>
                         </div>
+
+
+
+                        
 
                         <div class="form-row modules-section" id="discrimination">
                         </div>
@@ -81,7 +137,7 @@
 
                   <div class="col">
                     <div class="form-group" id="scoring">
-                        <label for="modules">Modules</label>
+                        <label for="scoring">Scoring</label>
                         <div class="form-row modules-section" id="prescreening">
                         </div>
 

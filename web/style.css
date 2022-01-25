@@ -1,0 +1,24 @@
+.collection-section{
+    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+}
+
+.modules-section{
+    background-color: darkgrey;
+    border-radius: 4px;
+}
+
+#data-select{
+    height: 62vh;
+}
+
+#collection-buttons{
+}
+
+#alt-data-select{
+    height: 31vh;
+}
+
+#menu{
+    margin: 0px;
+}

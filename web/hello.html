@@ -128,7 +128,56 @@
 
                         
 
-                        <div class="form-row modules-section" id="discrimination">
+                        <label class="text-center" for="discrimination">Discrimination</label>
+                        <div class="row modules-section" id="discrimination">
+                          <div class="col">
+                            <div class="row">
+                              <label for="algorithm-start">Algorithm Start</label>
+                              <select id="algorithm-start">
+                                <option selected>Training</option>
+                                <option >x</option>
+                                <option >y</option>
+                              </select>
+
+                              <label for="fusion-start">Fusion Start</label>
+                              <select id="fusion-start">
+                                <option selected>Disable</option>
+                                <option >x</option>
+                                <option >y</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col ">
+                            <div class="row">
+                              <label class="text-center" for="crossval-folds">Crossval Folds</label>
+                              <select id="crossval-folds">
+                                <option selected>Region Based</option>
+                                <option >x</option>
+                                <option >y</option>
+                              </select>
+
+                              <select class="form-select" multiple aria-label="multiple select example">
+                                <option selected>ExtractFeatsNow</option>
+                                <option value="1">GRNN</option>
+                                <option value="2">Perfect</option>
+                              </select>
+
+                              
+                              <select id="?">
+                                <option selected>GeoMean</option>
+                                <option >x</option>
+                                <option >y</option>
+                              </select>
+
+                              <label class="text-center" for="training-exclusions">Training Exclusions</label>
+                              <select id="training-exclusions">
+                                <option selected>None</option>
+                                <option >x</option>
+                                <option >y</option>
+                              </select>
+
+                            </div>
+                          </div>
                         </div>
 
                       </div>

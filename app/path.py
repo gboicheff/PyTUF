@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import importlib
 import inspect
+from model import Model
 
 class PathManager:
     def __init__(self, data_paths={}, model_paths={}):
@@ -49,4 +50,6 @@ class PathManager:
         members = dict(inspect.getmembers(mod))
         # instantiate the class with the given name and return it
         model = members[name]()
+        if not isinstance(model, Model):
+            raise Exception("Model must implement abstract Model class!")
         return model

@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import importlib
+import inspect
 
 class PathManager:
     def __init__(self, data_paths={}, model_paths={}):
@@ -40,7 +41,12 @@ class PathManager:
     def get_model(self, name):
         path = self.model_paths[name]
         self.check_model_file(path)
+        # dynamically load module at target path
         spec = importlib.util.spec_from_file_location(name, path)
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
-        return mod
+        # get dictionary of all classes inside the module
+        members = dict(inspect.getmembers(mod))
+        # instantiate the class with the given name and return it
+        model = members[name]()
+        return model

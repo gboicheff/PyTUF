@@ -13,11 +13,9 @@ print(pm.get_data("iris"))
 
 iris = datasets.load_iris()
 
-pm.add_model_path("test", "C:/Dev/PythonEELDemo/app/models/testing/gnb.py")
-mod = pm.get_model("test")
-# returns list of tuples for all classes inside the module
-members = dict(inspect.getmembers(mod))
-model = members["GNB"]()
+pm.add_model_path("GNB", "C:/Dev/PythonEELDemo/app/models/testing/gnb.py")
+model = pm.get_model("GNB")
+
 model.fit(iris.data, iris.target)
 
 print(model.predict(iris.data[:100,]))

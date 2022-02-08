@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class model(ABC):
+class Model(ABC):
     
     @abstractmethod
     def fit_predict(features):

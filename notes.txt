@@ -1,0 +1,8 @@
+https://towardsdatascience.com/building-a-custom-model-in-scikit-learn-b0da965a1299
+
+programattic import
+https://stackoverflow.com/questions/301134/how-to-import-a-module-given-its-name-as-string/301298
+
+-do we need an abstract data class or can we just use csvs
+-are prescreeners necessary?
+-how should data and target be separated?

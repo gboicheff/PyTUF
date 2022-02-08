@@ -1,7 +1,6 @@
 import pandas as pd
 import os
 import importlib
-# from model import Model
 
 class PathManager:
     def __init__(self, data_paths={}, model_paths={}):
@@ -25,7 +24,6 @@ class PathManager:
             raise Exception("Name already exists!")
         self.check_data_file(path)
         self.data_paths[name] = path
-
 
     def add_model_path(self, name, path):
         if name in self.data_paths:

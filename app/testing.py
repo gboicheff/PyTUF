@@ -17,11 +17,15 @@ data = iris[iris.columns[:-1]]
 
 
 target = iris[iris.columns[-1]]
+
+
 target_dict = {
     "Setosa": 0,
     "Virginica":1,
     "Versicolor":2
 }
+
+
 target = list(map(lambda x: target_dict[x], target))
 
 

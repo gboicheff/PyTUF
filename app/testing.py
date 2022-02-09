@@ -10,15 +10,28 @@ print(pm.get_data("iris"))
 
 
 
+iris = pm.get_data("iris")
+print(iris)
+print(iris.shape)
+data = iris[iris.columns[:-1]]
 
-iris = datasets.load_iris()
+
+target = iris[iris.columns[-1]]
+target_dict = {
+    "Setosa": 0,
+    "Virginica":1,
+    "Versicolor":2
+}
+target = list(map(lambda x: target_dict[x], target))
+
+
 
 pm.add_model_path("GNB", "C:/Dev/PythonEELDemo/app/models/testing/gnb.py")
 model = pm.get_model("GNB")
 
-model.fit(iris.data, iris.target)
+model.fit(data, target)
 
-print(model.predict(iris.data[:100,]))
+print(model.predict(data[:100]))
 
 
  

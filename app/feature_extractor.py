@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class feature_extractor(ABC):
+class FeatureExtractor(ABC):
     
     @abstractmethod
     def fit_transform():

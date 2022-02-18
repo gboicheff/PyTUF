@@ -1,41 +1,23 @@
-from path import PathManager
+from path import PathManager, PathType
 from sklearn import datasets
 import inspect
+
+
+
 pm = PathManager()
 
-pm.add_data_path("iris", "C:/Dev/PythonEELDemo/app/data/iris.csv")
-print(pm.get_data("iris"))
+pm.add_path("iris", PathType.DATA, "C:/Dev/PythonEELDemo/app/data/test/iris.py")
+iris = pm.load("iris", PathType.DATA)
+
+pm.add_path("GNB", PathType.MODEL, "C:/Dev/PythonEELDemo/app/models/testing/gnb.py")
+model = pm.load("GNB", PathType.MODEL)
 
 
 
 
+model.fit(iris.get_training_data(), iris.get_training_target())
 
-iris = pm.get_data("iris")
-print(iris)
-print(iris.shape)
-data = iris[iris.columns[:-1]]
-
-
-target = iris[iris.columns[-1]]
-
-
-target_dict = {
-    "Setosa": 0,
-    "Virginica":1,
-    "Versicolor":2
-}
-
-
-target = list(map(lambda x: target_dict[x], target))
-
-
-
-pm.add_model_path("GNB", "C:/Dev/PythonEELDemo/app/models/testing/gnb.py")
-model = pm.get_model("GNB")
-
-model.fit(data, target)
-
-print(model.predict(data[:100]))
+print(model.predict(iris.get_testing_data()))
 
 
  

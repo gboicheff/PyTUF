@@ -15,6 +15,18 @@
 #collection-buttons{
 }
 
+#feature-extract-select{
+    height: 30vh;
+}
+
+#scoring-exclusion-select{
+    height: 30vh;
+}
+
+#classifier-select{
+    height: 30vh;
+}
+
 #alt-data-select{
     height: 30vh;
 }

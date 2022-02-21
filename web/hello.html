@@ -17,32 +17,12 @@
               <div class="row">
                   <div class="col" id="collections">
                     <label for="collections">Collections</label>
+                    
                     <div class="form-group" id="collections">
+                      <button class="btn btn-primary" type="submit">Select Data Path</button>
                         <div class="form-row collection-section">
                             <div class="col">
                                 <select class="form-select" multiple aria-label="multiple select example" id="data-select">
-                                    <option selected>MPG Sept 2005</option>
-                                    <option value="1">Small Millbrook</option>
-                                    <option value="2">Tiny Millbrook</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row align-items-center collection-section" id="collection-buttons">
-                            <div class="col d-flex justify-content-center d-flex align-items-center">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                                    <label class="form-check-label" for="defaultCheck1">
-                                      Use Alternate Test Set
-                                    </label>
-                                  </div>
-                            </div>
-                            <div class="col d-flex justify-content-center">
-                                <button class="btn btn-primary" type="submit">Validate/Download</button>
-                            </div>
-                        </div>
-                        <div class="form-row collection-section">
-                            <div class="col">
-                                <select class="form-select" multiple aria-label="multiple select example" id="alt-data-select" disabled>
                                     <option selected>MPG Sept 2005</option>
                                     <option value="1">Small Millbrook</option>
                                     <option value="2">Tiny Millbrook</option>
@@ -57,22 +37,34 @@
                   <div class="col">
                     <label for="modules">Modules</label>
                     <div class="form-group" id="modules">
-                        <div class="form-row modules-section" id="prescreening">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                  Prescreen
-                                </label>
+                        
+
+                        <label class="text-center" for="feature-extraction">Feature Extraction</label>
+                        <div class="row modules-section" id="feature-extraction">
+                          
+                          <div class="col ">
+                            <div class="row">
+                              <select class="form-select" multiple aria-label="multiple select example" id="feature-extract-select">
+                                <option selected>Bounce</option>
+                                <option value="1">KSum</option>
+                                <option value="2">Signature</option>
+                              </select>
                             </div>
-
-
-
+                          </div>
                         </div>
 
-                        <div class="form-row modules-section" id="feature-extraction">
-                        </div>
-
-                        <div class="form-row modules-section" id="discrimination">
+                        <label class="text-center" for="discrimination">Discrimination</label>
+                        <div class="row modules-section" id="discrimination">
+                          
+                          <div class="col ">
+                            <div class="row">
+                              <select class="form-select" multiple aria-label="multiple select example" id="classifier-select">
+                                <option selected>AWG_2017</option>
+                                <option value="1">ExtractFeatsNow</option>
+                                <option value="2">GRNN</option>
+                              </select>
+                            </div>
+                          </div>
                         </div>
 
                       </div>
@@ -81,14 +73,92 @@
 
                   <div class="col">
                     <div class="form-group" id="scoring">
-                        <label for="modules">Modules</label>
-                        <div class="form-row modules-section" id="prescreening">
-                        </div>
+                        <label for="scoring">Scoring</label>
+                        <div class="form-row scoring-section" id="scoring-section">
+                          <div class = "col">
+                            <select class="form-control" id="scoring-select">
+                              <option>Simple Score</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option>4</option>
+                              <option>5</option>
+                            </select>
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" id="prescoreall-check">
+                              <label class="form-check-label" for="prescoreall-check">
+                                Prescore all results
+                              </label>
+                            </div>
+                          </div>
+                          <div class="row align-items-center collection-section" id="prescreener-buttons">
+                            <div class="col d-flex justify-content-center d-flex align-items-center">
+                              <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" value="" id="prescreenROC-check">
+                                  <label class="form-check-label" for="prescreenROC-check">
+                                    Prescreener ROC
+                                  </label>
+                              </div>
+                              <div class="col d-flex justify-content-center">
+                                <input class="form-check-input" type="checkbox" value="" id="prescreenFAR-check">
+                                <label class="form-check-label" for="prescreenFar-check">
+                                  Prescreener FAR
+                                </label>
+                            </div>
+                          </div>
+                          <div class="row align-items-center collection-section" id="algorithm-buttons">
+                            <div class="col d-flex justify-content-center d-flex align-items-center">
+                              <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" value="" id="algorithmROC-check">
+                                  <label class="form-check-label" for="algorithmROC-check">
+                                    Algorithm ROCs
+                                  </label>
+                              </div>
+                              <div class="col d-flex justify-content-center">
+                                <input class="form-check-input" type="checkbox" value="" id="algorithmFAR-check">
+                                <label class="form-check-label" for="algorithmFAR-check">
+                                  Algorithm FAR
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row align-items-center collection-section" id="fuser-buttons">
+                            <div class="col d-flex justify-content-center d-flex align-items-center">
+                              <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" value="" id="fuserROC-check">
+                                  <label class="form-check-label" for="fuserROC-check">
+                                    Fuser ROC
+                                  </label>
+                                
+                              </div>
+                              <div class="col d-flex justify-content-center">
+                                <input class="form-check-input" type="checkbox" value="" id="fuserFAR-check">
+                                <label class="form-check-label" for="fuserFAR-check">
+                                  Fuser FAR
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          
 
-                        <div class="form-row modules-section" id="feature-extraction">
+                          <div class="form-row">
+                            <div>
+                              <label>Scoring Exlclusions</label>
+                            </div>
+                            <div class="col">
+                                <select class="form-select" multiple aria-label="multiple select example" id="scoring-exclusion-select">
+                                    <option selected>2016 AdvGPR Exclusions</option>
+                                    <option value="1">AWG Standard Exclusions 3.0</option>
+                                    <option value="2">AP, SIMS, 155s, PPs</option>
+                                </select>
+                            </div>
                         </div>
-
-                        <div class="form-row modules-section" id="discrimination">
+                          
+                        <div class="form-row scoring-section" id="run-extraction">
+                          <div class = "col">
+                            <div class="form-check">
+                              <button class="btn btn-primary" type="submit">Run Test</button>
+                            </div>
+                          </div>
                         </div>
 
                       </div>

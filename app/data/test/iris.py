@@ -3,11 +3,9 @@ import pandas as pd
 
 class iris(Data):
     def __init__(self):
-        self.data = pd.read_csv("C:/Dev/PythonEELDemo/app/data/test/test.csv")
-
-        
-        self.training = self.data[100:]
-        self.testing = self.data[:100]
+        self.data = pd.read_csv("app/data/test/test.csv")
+        self.training = self.data[50:]
+        self.testing = self.data[:50]
 
 
     def convert_target(self, target):

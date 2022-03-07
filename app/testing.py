@@ -3,30 +3,52 @@ from results import ResultManager, Result
 from sklearn import datasets
 import inspect
 
+def load_data(pm):
+    pm.add_path("iris", PathType.DATA, data_path)
+    pm.add_path("GNB", PathType.MODEL, gnb_model_path)
+    pm.add_path("SVC", PathType.MODEL, svc_model_path)
+    pm.add_path("DecisionTree", PathType.MODEL, dtree_model_path)
+
+data_path = "app/data/test/iris.py"
+gnb_model_path = "app/models/GNB/gnb.py"
+svc_model_path = "app/models/SVC/svc.py"
+dtree_model_path = "app/models/DecisionTree/dtree.py"
 
 
 pm = PathManager()
 
-model_path = "C:/Dev/PythonEELDemo/app/data/test/iris.py"
-pm.add_path("iris", PathType.DATA, model_path)
-iris = pm.load("iris", PathType.DATA)
+# load_data(pm)
 
-pm.add_path("GNB", PathType.MODEL, "C:/Dev/PythonEELDemo/app/models/testing/gnb.py")
-model = pm.load("GNB", PathType.MODEL)
-
-
+data = pm.load("iris", PathType.DATA)
+gnb = pm.load("GNB", PathType.MODEL)
+svc = pm.load("SVC", PathType.MODEL)
+dtree = pm.load("DecisionTree", PathType.MODEL)
 
 
-model.fit(iris.get_training_data(), iris.get_training_target())
 
-result_arr = model.predict(iris.get_testing_data()).tolist()
+gnb.fit(data.get_training_data(), data.get_training_target())
+svc.fit(data.get_training_data(), data.get_training_target())
+dtree.fit(data.get_training_data(), data.get_training_target())
 
-result = Result(model_path, {}, result_arr)
+
 
 rm = ResultManager()
 
-rm.add_result(result)
+gnb_result_arr = gnb.predict(data.get_testing_data()).tolist()
+svc_result_arr = svc.predict(data.get_testing_data()).tolist()
+dtree_result_arr = dtree.predict(data.get_testing_data()).tolist()
 
-print(rm.load_result(model_path, {}))
+gnb_result = Result(gnb_model_path, {}, gnb_result_arr)
+svc_result = Result(svc_model_path, {}, svc_result_arr)
+dtree_result = Result(dtree_model_path, {}, dtree_result_arr)
+
+
+rm.add_result(gnb_result)
+rm.add_result(svc_result)
+rm.add_result(dtree_result)
+
+print(rm.load_result(gnb_model_path, {}))
+print(rm.load_result(svc_model_path, {}))
+print(rm.load_result(dtree_model_path, {}))
 
  

@@ -19,7 +19,7 @@ class PathType(Enum):
 class PathDict:
     def __init__(self):
         self.d = {}
-        self.STATE_PATH = "path_dict.json"
+        self.STATE_PATH = "path_dict.pkl"
 
     def add_path(self, name: str, ptype: PathType, path: str):
         key = (name, ptype)
@@ -34,14 +34,23 @@ class PathDict:
         return self.d[key]
 
     def save_state(self):
-        with open(self.STATE_PATH, "w", encoding="UTF-8") as outfile:
-            json.dump({str(k): v for k, v in self.d.items()}, outfile)
-
+        with open(self.STATE_PATH, "wb") as outfile:
+            pickle.dump(self.d, outfile)
+    
     def load_state(self):
         if os.path.exists(self.STATE_PATH):
-            with open(self.STATE_PATH, "r", encoding="UTF-8") as file:
-                loaded_dict = json.load(file)
-                self.d.update({ast.literal_eval(k): v for k, v in loaded_dict.items()})
+            with open(self.STATE_PATH, "rb") as infile:
+                self.d = pickle.load(infile)
+
+    # def save_state(self):
+    #     with open(self.STATE_PATH, "w", encoding="UTF-8") as outfile:
+    #         json.dump({str(k): v for k, v in self.d.items()}, outfile, indent=4)
+
+    # def load_state(self):
+    #     if os.path.exists(self.STATE_PATH):
+    #         with open(self.STATE_PATH, "r", encoding="UTF-8") as file:
+    #             loaded_dict = json.load(file)
+    #             self.d.update({ast.literal_eval(k): v for k, v in loaded_dict.items()})
 
     def clear(self):
         self.d = {}
@@ -56,10 +65,11 @@ class PathManager:
         self.p_dict = PathDict()
         # self.reset_state()
         # enable this after testing
-        # self.restore_state()
+        self.restore_state()
 
     def __del__(self):
-        self.save_state()
+        #self.save_state()
+        pass
 
     def save_state(self):
         self.p_dict.save_state()
@@ -80,6 +90,7 @@ class PathManager:
 
     def add_path(self, name, ptype, path):
         self.p_dict.add_path(name, ptype, path)
+        self.save_state()
 
 
     

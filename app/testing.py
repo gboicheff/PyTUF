@@ -3,7 +3,9 @@ from results import ResultManager, Result
 from sklearn import datasets
 import inspect
 
-def load_data(pm):
+
+
+def add_paths(pm):
     pm.add_path("iris", PathType.DATA, data_path)
     pm.add_path("GNB", PathType.MODEL, gnb_model_path)
     pm.add_path("SVC", PathType.MODEL, svc_model_path)
@@ -17,7 +19,7 @@ dtree_model_path = "app/models/DecisionTree/dtree.py"
 
 pm = PathManager()
 
-# load_data(pm)
+# add_paths(pm)
 
 data = pm.load("iris", PathType.DATA)
 gnb = pm.load("GNB", PathType.MODEL)
@@ -46,6 +48,8 @@ dtree_result = Result(dtree_model_path, {}, dtree_result_arr)
 rm.add_result(gnb_result)
 rm.add_result(svc_result)
 rm.add_result(dtree_result)
+
+
 
 print(rm.load_result(gnb_model_path, {}))
 print(rm.load_result(svc_model_path, {}))

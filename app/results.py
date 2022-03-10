@@ -4,10 +4,11 @@ import ast
 import json
 #https://github.com/redis/redis-py
 
-# class Options:
 
+# this will be used to add option information to the stored result name later
 def convert_options(options):
     return ""
+
 class Result:
     def __init__(self, filename, options, result_arr):
         self.name = filename + convert_options(options)
@@ -27,7 +28,6 @@ class ResultManager:
                     break
                 h.update(data)
         return h.hexdigest()
-
 
     def add_result(self, result):
         hash = self.hash_file(result.name)

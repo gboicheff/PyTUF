@@ -63,7 +63,6 @@ class PathDict:
 class PathManager:
     def __init__(self):
         self.p_dict = PathDict()
-        # self.reset_state()
         # enable this after testing
         self.restore_state()
 

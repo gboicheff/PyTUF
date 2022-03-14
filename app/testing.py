@@ -1,4 +1,4 @@
-from path import PathManager, PathType
+from paths import PathManager, PathType
 from results import ResultManager, Result
 from sklearn import datasets
 import inspect

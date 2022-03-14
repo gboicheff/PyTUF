@@ -35,9 +35,19 @@ class TufManager:
             raise Exception("Model must be selected before running")
 
         data = self.pm.load(*self.options.data_path)
+        training_data = data.get_testing_data()
+        testing_data = data.get_testing_data()
+        model = self.pm.load(*self.options.model_path)
+        
         if self.options.ft_path is not None:
             ft = self.pm.load(*self.options.ft_path)
-            data = ft.fit_transform(data)
+            training_data = ft.fit_transform(training_data)
+            testing_data = ft.fit(testing_data)
+
+        model.fit(training_data)
+        return model.predict(testing_data)
+
+
         
         
 

@@ -1,0 +1,2 @@
+class TufScoring:
+    pass

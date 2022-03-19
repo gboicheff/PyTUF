@@ -4,7 +4,7 @@
 }
 
 .modules-section{
-    background-color: darkgrey;
+    
     border-radius: 4px;
 }
 
@@ -21,6 +21,10 @@
 
 #scoring-exclusion-select{
     height: 30vh;
+}
+
+.btnred{
+    background-color: red;
 }
 
 #classifier-select{

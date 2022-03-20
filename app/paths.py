@@ -41,16 +41,8 @@ class PathDict:
         if os.path.exists(self.STATE_PATH):
             with open(self.STATE_PATH, "rb") as infile:
                 self.d = pickle.load(infile)
-
-    # def save_state(self):
-    #     with open(self.STATE_PATH, "w", encoding="UTF-8") as outfile:
-    #         json.dump({str(k): v for k, v in self.d.items()}, outfile, indent=4)
-
-    # def load_state(self):
-    #     if os.path.exists(self.STATE_PATH):
-    #         with open(self.STATE_PATH, "r", encoding="UTF-8") as file:
-    #             loaded_dict = json.load(file)
-    #             self.d.update({ast.literal_eval(k): v for k, v in loaded_dict.items()})
+    def get_entries(self):
+        return self.d.items()
 
     def clear(self):
         self.d = {}
@@ -90,8 +82,6 @@ class PathManager:
     def add_path(self, name, ptype, path):
         self.p_dict.add_path(name, ptype, path)
         self.save_state()
-
-
     
     def load(self, name, ptype):
         path = self.p_dict.get_path(name, ptype)
@@ -115,3 +105,11 @@ class PathManager:
 
         return obj
 
+    def get_entries(self, selected_type):
+        entries = self.p_dict.get_entries()
+        return [(name, path) for ((name, t), path) in entries if t == selected_type]
+
+
+
+def testing():
+    pass

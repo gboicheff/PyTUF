@@ -55,4 +55,4 @@ print(rm.load_result(gnb_model_path, {}))
 print(rm.load_result(svc_model_path, {}))
 print(rm.load_result(dtree_model_path, {}))
 
- 
+print(pm.get_entries(PathType.MODEL))

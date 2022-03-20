@@ -16,12 +16,16 @@ class TufInterface:
         self.options = Options()
 
     # upload path
-    def upload(self, name, path, type):
+    def upload(self, name: str, path: str, type: PathType):
         self.pm.add_path(name, path, type)
+    
+    # get the name:path pairs to be used for the entries in one of the lists
+    def get_entries(self, type: PathType):
+        return self.pm.get_entries(type)
 
 
     # select data, feature extractor or model
-    def select(self, name, type):
+    def select(self, name: str, type: PathType):
         if type == PathType.DATA:
             self.options.data_path = (name, type)
         elif type == PathType.FEXTRACTOR:

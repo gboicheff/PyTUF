@@ -28,6 +28,7 @@ class PathDict:
         self.d[key] = path
 
     def get_path(self, name: str, ptype: PathType):
+        print(self.d.items())
         key = (name, ptype)
         if not key in self.d:
             raise Exception("No path exists for name: {}".format(name))
@@ -56,7 +57,7 @@ class PathManager:
     def __init__(self):
         self.p_dict = PathDict()
         # enable this after testing
-        self.restore_state()
+        # self.restore_state()
 
     def __del__(self):
         #self.save_state()
@@ -71,8 +72,6 @@ class PathManager:
     def reset_state(self):
         self.p_dict.reset()
 
-
-
     def check_file(self, path):
         if os.path.splitext(path)[-1].lower() != ".py":
             raise Exception("File at given path is not a csv file!")
@@ -82,6 +81,10 @@ class PathManager:
     def add_path(self, name, ptype, path):
         self.p_dict.add_path(name, ptype, path)
         self.save_state()
+    
+    def get_path(self, name, ptype):
+        return self.p_dict.get_path(name, ptype)
+
     
     def load(self, name, ptype):
         path = self.p_dict.get_path(name, ptype)

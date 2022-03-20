@@ -38,14 +38,14 @@ class ResultManager:
         json_d = json.dumps(d)
         self.db.set(result.name, json_d)
 
-    def load_result(self, filename, options):
-        name = filename + convert_options(options)
+    def load_result(self, selections, model_path):
+        name = selections.data_name + "-" + selections.ft_name + "-" + selections.model_name
         if self.db.exists(name):
             d = json.loads(self.db.get(name))
             old_hash, result_arr = d["hash"], d["result_arr"]
-            hash = self.hash_file(filename)
+            hash = self.hash_file(model_path)
             if old_hash != hash:
-                raise Exception("{} has been modified!".format(filename))
+                raise Exception("{} has been modified!".format(model_path))
             return result_arr
         else:
             raise Exception("Record with name {} does not exist!".format(name))

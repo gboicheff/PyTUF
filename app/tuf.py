@@ -19,6 +19,7 @@ class TufInterface:
     def upload(self, name: str, path: str, type: PathType):
         self.pm.add_path(name, type, path)
 
+    # remove path
     def remove(self, name:str, type: PathType):
         self.pm.remove_path(name, type)
     
@@ -42,11 +43,9 @@ class TufInterface:
     def select_options():
         pass
 
-    # fit transform model
     # will be executed when run test button is pressed
     def run(self):
         model_path = self.pm.get_path(self.selections.model_name, PathType.MODEL)
-        #return self.rm.load_result(self.selections, model_path).prediction_arr
         try:
             return self.rm.load_result(self.selections, model_path)
         except Exception as e:
@@ -105,7 +104,7 @@ if __name__ == "__main__":
     ti.remove("SVC", PathType.MODEL)
     print(ti.get_entries(PathType.MODEL))
 
-    
+
 
     print(ti.get_entries(PathType.DATA))
 

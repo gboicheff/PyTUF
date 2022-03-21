@@ -28,7 +28,6 @@ class PathDict:
         self.d[key] = path
 
     def get_path(self, name: str, ptype: PathType):
-        print(self.d.items())
         key = (name, ptype)
         if not key in self.d:
             raise Exception("No path exists for name: {}".format(name))

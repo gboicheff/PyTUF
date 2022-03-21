@@ -40,41 +40,39 @@ class TufInterface:
         pass
 
     # fit transform model
+    # will be executed when run test button is pressed
     def run(self):
-        # data_path = self.pm.get_path(self.selections.data_name)
-        # ft_path = self.pm.get_path(self.selections.ft_name)
         model_path = self.pm.get_path(self.selections.model_name, PathType.MODEL)
-
+        #return self.rm.load_result(self.selections, model_path).prediction_arr
         try:
             return self.rm.load_result(self.selections, model_path)
-        except:
+        except Exception as e:
             if self.selections.data_name == "":
                 raise Exception("Data must be selected before running")
             elif self.selections.model_name == "":
                 raise Exception("Model must be selected before running")
 
             data = self.pm.load(self.selections.data_name, PathType.DATA)
-            training_data = data.get_testing_data()
+            training_data = data.get_training_data()
+            training_target = data.get_training_target()
             testing_data = data.get_testing_data()
             model = self.pm.load(self.selections.model_name, PathType.MODEL)
             
-            if self.selections.ft_path != "":
+            if self.selections.ft_name != "":
                 ft = self.pm.load(self.selections.ft_name, PathType.FEXTRACTOR)
                 training_data = ft.fit_transform(training_data)
                 testing_data = ft.fit(testing_data)
 
-            model.fit(training_data)
-            return model.predict(testing_data)
+            model.fit(training_data, training_target)
+            result_arr = model.predict(testing_data)
+            self.rm.add_result(self.selections, result_arr, model_path)
+            return result_arr
 
     # do scoring
     def score():
         pass
 
 
-
-
-def test():
-    pass
 
 
 if __name__ == "__main__":
@@ -88,15 +86,29 @@ if __name__ == "__main__":
 
 
     ti.upload("iris", data_path, PathType.DATA)
-    ti.upload("model", gnb_model_path, PathType.MODEL)
+
+    ti.upload("GNB", gnb_model_path, PathType.MODEL)
+    ti.upload("SVC", svc_model_path, PathType.MODEL)
+    ti.upload("training_target", dtree_model_path, PathType.MODEL)
+
 
 
     ti.select("iris", PathType.DATA)
-    ti.select("model", PathType.MODEL)
+    ti.select("GNB", PathType.MODEL)
+
+
+
+    print(ti.get_entries(PathType.MODEL))
+    print(ti.get_entries(PathType.DATA))
 
 
 
     ti.run()
+    ti.run()
+    ti.run()
+    # print(ti.run())
+    # print(ti.run())
+    # print(ti.run())
 
 
         

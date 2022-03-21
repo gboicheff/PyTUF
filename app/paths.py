@@ -26,6 +26,13 @@ class PathDict:
         if key in self.d:
             raise Exception("Name already assigned to path: {}".format(self.d[key]))
         self.d[key] = path
+    
+    def remove_path(self, name:str, ptype: PathType):
+        key = (name, ptype)
+        if not key in self.d:
+            raise Exception("No path exists for name: {}".format(name))
+        self.d.pop(key)
+        
 
     def get_path(self, name: str, ptype: PathType):
         key = (name, ptype)
@@ -41,6 +48,7 @@ class PathDict:
         if os.path.exists(self.STATE_PATH):
             with open(self.STATE_PATH, "rb") as infile:
                 self.d = pickle.load(infile)
+
     def get_entries(self):
         return self.d.items()
 
@@ -79,6 +87,10 @@ class PathManager:
 
     def add_path(self, name, ptype, path):
         self.p_dict.add_path(name, ptype, path)
+        self.save_state()
+    
+    def remove_path(self, name, ptype):
+        self.p_dict.remove_path(name, ptype)
         self.save_state()
     
     def get_path(self, name, ptype):

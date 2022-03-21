@@ -18,6 +18,9 @@ class TufInterface:
     # upload path
     def upload(self, name: str, path: str, type: PathType):
         self.pm.add_path(name, type, path)
+
+    def remove(self, name:str, type: PathType):
+        self.pm.remove_path(name, type)
     
     # get the name:path pairs to be used for the entries in one of the lists
     def get_entries(self, type: PathType):
@@ -99,6 +102,11 @@ if __name__ == "__main__":
 
 
     print(ti.get_entries(PathType.MODEL))
+    ti.remove("SVC", PathType.MODEL)
+    print(ti.get_entries(PathType.MODEL))
+
+    
+
     print(ti.get_entries(PathType.DATA))
 
 

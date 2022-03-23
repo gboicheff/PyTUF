@@ -39,36 +39,43 @@ class TufInterface:
         else:
             raise Exception("Invalid type on selected entry!")
     
-    # select options + maybe scoring method
-    def select_options():
-        pass
+    def toggle_use_cache(self):
+        self.selections.use_cache = not self.selections.use_cache
+
+
+    def train_fit(self):
+        model_path = self.pm.get_path(self.selections.model_name, PathType.MODEL)
+        if self.selections.data_name == "":
+                raise Exception("Data must be selected before running")
+        elif self.selections.model_name == "":
+            raise Exception("Model must be selected before running")
+
+        data = self.pm.load(self.selections.data_name, PathType.DATA)
+        training_data = data.get_training_data()
+        training_target = data.get_training_target()
+        testing_data = data.get_testing_data()
+        model = self.pm.load(self.selections.model_name, PathType.MODEL)
+        
+        if self.selections.ft_name != "":
+            ft = self.pm.load(self.selections.ft_name, PathType.FEXTRACTOR)
+            training_data = ft.fit_transform(training_data)
+            testing_data = ft.fit(testing_data)
+
+        model.fit(training_data, training_target)
+        result_arr = model.predict(testing_data)
+        self.rm.add_result(self.selections, result_arr, model_path)
+        return result_arr
 
     # will be executed when run test button is pressed
     def run(self):
         model_path = self.pm.get_path(self.selections.model_name, PathType.MODEL)
-        try:
-            return self.rm.load_result(self.selections, model_path)
-        except Exception as e:
-            if self.selections.data_name == "":
-                raise Exception("Data must be selected before running")
-            elif self.selections.model_name == "":
-                raise Exception("Model must be selected before running")
-
-            data = self.pm.load(self.selections.data_name, PathType.DATA)
-            training_data = data.get_training_data()
-            training_target = data.get_training_target()
-            testing_data = data.get_testing_data()
-            model = self.pm.load(self.selections.model_name, PathType.MODEL)
-            
-            if self.selections.ft_name != "":
-                ft = self.pm.load(self.selections.ft_name, PathType.FEXTRACTOR)
-                training_data = ft.fit_transform(training_data)
-                testing_data = ft.fit(testing_data)
-
-            model.fit(training_data, training_target)
-            result_arr = model.predict(testing_data)
-            self.rm.add_result(self.selections, result_arr, model_path)
-            return result_arr
+        if self.selections.use_cache:
+            try:
+                return self.rm.load_result(self.selections, model_path)
+            except Exception as e:
+                return self.train_fit()
+        else:
+            return self.train_fit()
 
     # do scoring
     def score():
@@ -91,7 +98,7 @@ if __name__ == "__main__":
 
     ti.upload("GNB", gnb_model_path, PathType.MODEL)
     ti.upload("SVC", svc_model_path, PathType.MODEL)
-    ti.upload("training_target", dtree_model_path, PathType.MODEL)
+    ti.upload("DecisionTree", dtree_model_path, PathType.MODEL)
 
 
 
@@ -113,9 +120,9 @@ if __name__ == "__main__":
     ti.run()
     ti.run()
     ti.run()
-    # print(ti.run())
-    # print(ti.run())
-    # print(ti.run())
+    print(ti.run())
+    print(ti.run())
+    print(ti.run())
 
 
         

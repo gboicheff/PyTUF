@@ -85,21 +85,7 @@ class PathManager:
         if not os.path.exists(path):
             raise Exception("File at given path does not exist!")
 
-    def add_path(self, name, ptype, path):
-        self.p_dict.add_path(name, ptype, path)
-        self.save_state()
-    
-    def remove_path(self, name, ptype):
-        self.p_dict.remove_path(name, ptype)
-        self.save_state()
-    
-    def get_path(self, name, ptype):
-        return self.p_dict.get_path(name, ptype)
-
-    
-    def load(self, name, ptype):
-        path = self.p_dict.get_path(name, ptype)
-        self.check_file(path)
+    def get_class(self, name: str, path: str, ptype: PathType):
         # dynamically load module at target path
         spec = importlib.util.spec_from_file_location(name, path)
         mod = importlib.util.module_from_spec(spec)
@@ -118,6 +104,41 @@ class PathManager:
             raise Exception("Model must implement Model class!")
 
         return obj
+
+    def add_path(self, name, ptype, path):
+        self.get_class(name, path, ptype)
+        self.p_dict.add_path(name, ptype, path)
+        self.save_state()
+    
+    def remove_path(self, name, ptype):
+        self.p_dict.remove_path(name, ptype)
+        self.save_state()
+    
+    def get_path(self, name, ptype):
+        return self.p_dict.get_path(name, ptype)
+
+    
+    def load(self, name, ptype):
+        path = self.p_dict.get_path(name, ptype)
+        self.check_file(path)
+        # # dynamically load module at target path
+        # spec = importlib.util.spec_from_file_location(name, path)
+        # mod = importlib.util.module_from_spec(spec)
+        # spec.loader.exec_module(mod)
+        # # get dictionary of all classes inside the module
+        # members = dict(inspect.getmembers(mod))
+        # # instantiate the class with the given name and return it
+        # obj = members[name]()
+        # if ptype == PathType.DATA and not isinstance(obj, Data):
+        #     raise Exception("Data must implement Data class!")
+        
+        # if ptype == PathType.FEXTRACTOR and not isinstance(obj, FeatureExtractor):
+        #     raise Exception("Feature Extractor must implement Data class!")
+
+        # if ptype == PathType.MODEL and not isinstance(obj, Model):
+        #     raise Exception("Model must implement Model class!")
+
+        return self.get_class(name, path, ptype)
 
     def get_entries(self, selected_type):
         entries = self.p_dict.get_entries()

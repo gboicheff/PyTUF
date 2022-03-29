@@ -16,6 +16,13 @@ import numpy as np
 #         self.name = filename + convert_options(options)
 #         self.result_arr = result_arr
 
+class RMError(Exception):
+    def __init__(self, message, val):
+        self.message = message
+        self.val = val
+        super().__init__(self.message)
+
+
 class ResultManager:
     def __init__(self):
         self.db = pickledb.load("result.db", False)
@@ -52,10 +59,10 @@ class ResultManager:
             result_arr = np.array(ast.literal_eval(result_arr))
             hash = self.hash_file(model_path)
             if old_hash != hash:
-                raise Exception("{} has been modified!".format(model_path))
+                raise RMError("Model has been modified!", model_path)
             return result_arr
         else:
-            raise Exception("Record with name {} does not exist!".format(name))
+            raise RMError("Result does not exist!", name)
 
 
 

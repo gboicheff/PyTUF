@@ -1,5 +1,5 @@
 from paths import PathType
-from results import ResultManager
+from results import ResultManager, RMError
 from paths import PathManager
 from scoring import *
 import matplotlib.pyplot as plt
@@ -72,13 +72,15 @@ class TufInterface:
     # will be executed when run test button is pressed
     def run(self):
         model_path = self.pm.get_path(self.selections.model_name, PathType.MODEL)
+        res = None
         if self.selections.use_cache:
             try:
-                return self.rm.load_result(self.selections, model_path)
-            except Exception as e:
-                return self.train_fit()
+                res = self.rm.load_result(self.selections, model_path)
+            except RMError as e:
+                res =  self.train_fit()
         else:
-            return self.train_fit()
+            res = self.train_fit()
+        self.score(Score(*res))
 
     # do scoring
     def score(self, score):
@@ -147,10 +149,10 @@ if __name__ == "__main__":
     # print(ti.get_entries(PathType.DATA))
 
 
-    predictions, actual, prob, classes = ti.run()
+    ti.run()
 
-    score = Score(predictions, actual, prob, classes)
-    ti.score(score)
+    # score = Score(predictions, actual, prob, classes)
+    # ti.score(score)
 
 
 

@@ -11,12 +11,13 @@ class iris(Data):
 
 
     def convert_target(self, target):
-        target_dict = {
-            "Setosa": 0,
-            "Virginica":1,
-            "Versicolor":2
-        }
-        return list(map(lambda x: target_dict[x], target))
+        # target_dict = {
+        #     "Setosa": 0,
+        #     "Virginica":1,
+        #     "Versicolor":2
+        # }
+        # return list(map(lambda x: target_dict[x], target))
+        return target
 
     def get_training_data(self):
         return self.training[:, :-1]

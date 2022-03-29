@@ -131,6 +131,7 @@ if __name__ == "__main__":
     plt.plot([0,1], [0,1])
     for c in rocs.keys():
         plt.plot(rocs[c]["fprs"], rocs[c]["tprs"], label=c)
+        plt.legend()
     
     
     plt.show()

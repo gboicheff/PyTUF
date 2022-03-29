@@ -81,8 +81,36 @@ class TufInterface:
             return self.train_fit()
 
     # do scoring
-    def score():
-        pass
+    def score(self, score):
+        rocs = score.calculate_rocs()
+
+        fig, ax = plt.subplots(figsize=(10,7), facecolor=plt.cm.Blues(.2))
+        ax.set_xlabel("FPR Rate")
+        ax.set_ylabel("TPR Rate")
+        ax.plot([0,1], [0,1])
+
+        for c in rocs.keys():
+            ax.plot(rocs[c]["fprs"], rocs[c]["tprs"], label=c)
+            ax.legend()
+
+
+        result_str = ""
+
+        all_metrics = score.get_all_metrics(6)
+        for metric in all_metrics.keys():
+            result_str += "  {}  :  {}  ".format(metric, all_metrics[metric])
+
+        
+        ax.annotate(result_str,
+                xy = (0.9, -0.2),
+                xycoords='axes fraction',
+                ha='right',
+                va="center",
+                fontsize=10)
+        
+        ax.set_title("ROC ({}, {})".format(self.selections.data_name, self.selections.model_name), fontsize=14, fontweight='bold')
+        fig.tight_layout()
+        plt.show()
 
 
 
@@ -122,26 +150,23 @@ if __name__ == "__main__":
     predictions, actual, prob, classes = ti.run()
 
     score = Score(predictions, actual, prob, classes)
+    ti.score(score)
 
 
 
-    rocs = score.calculate_rocs()
-    plt.xlabel("FPR Rate")
-    plt.ylabel("TPR Rate")
-    plt.plot([0,1], [0,1])
-    for c in rocs.keys():
-        plt.plot(rocs[c]["fprs"], rocs[c]["tprs"], label=c)
-        plt.legend()
-    
-    
-    plt.show()
+
+    # fig = plt.figure()
+    # ax = fig.add_subplot()
+    # fig.subplots_adjust(top=0.85)
+    # fig.suptitle('ROC', fontsize=14, fontweight='bold')
+    # ax.set_title('axes title', fontsize=14, fontweight='bold')
 
 
-    print(score.calculate_accuracy())
-    print(score.calculate_avg_f1())
-    print(score.calculate_avg_precision())
-    print(score.calculate_avg_recall())
-    print(score.confusion_matrix)
+    # print(score.calculate_accuracy())
+    # print(score.calculate_avg_f1())
+    # print(score.calculate_avg_precision())
+    # print(score.calculate_avg_recall())
+    # print(score.confusion_matrix)
     # ti.run()
     # ti.run()
     # print(ti.run())

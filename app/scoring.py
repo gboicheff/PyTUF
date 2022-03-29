@@ -87,6 +87,14 @@ class Score:
                 "fprs": fprs 
             }
         return rocs
+
+    def get_all_metrics(self, num_places):
+        return {
+            "accuracy": round(self.calculate_accuracy(),num_places),
+            "f1_score": round(self.calculate_avg_f1(),num_places),
+            "avg_precision": round(self.calculate_avg_precision(),num_places),
+            "avg_recall": round(self.calculate_avg_recall(),num_places)
+        }
             
                 
 

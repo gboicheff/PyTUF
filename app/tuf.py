@@ -2,6 +2,7 @@ from paths import PathType
 from results import ResultManager
 from paths import PathManager
 from scoring import *
+import matplotlib.pyplot as plt
 
 class Selections:
     def __init__(self):
@@ -109,20 +110,32 @@ if __name__ == "__main__":
 
 
 
-    print(ti.get_entries(PathType.MODEL))
-    # ti.remove("GNB", PathType.MODEL)
-    print(ti.get_entries(PathType.MODEL))
+    # print(ti.get_entries(PathType.MODEL))
+    # # ti.remove("GNB", PathType.MODEL)
+    # print(ti.get_entries(PathType.MODEL))
 
 
 
-    print(ti.get_entries(PathType.DATA))
+    # print(ti.get_entries(PathType.DATA))
 
 
     predictions, actual, prob, classes = ti.run()
 
-    print(prob)
-    print(classes)
     score = Score(predictions, actual, prob, classes)
+
+
+
+    rocs = score.calculate_rocs()
+    plt.xlabel("FPR Rate")
+    plt.ylabel("TPR Rate")
+    plt.plot([0,1], [0,1])
+    for c in rocs.keys():
+        plt.plot(rocs[c]["fprs"], rocs[c]["tprs"], label=c)
+    
+    
+    plt.show()
+
+
     print(score.calculate_accuracy())
     print(score.calculate_avg_f1())
     print(score.calculate_avg_precision())

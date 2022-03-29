@@ -1,6 +1,7 @@
 from paths import PathType
 from results import ResultManager
 from paths import PathManager
+from scoring import *
 
 class Selections:
     def __init__(self):
@@ -54,6 +55,7 @@ class TufInterface:
         training_data = data.get_training_data()
         training_target = data.get_training_target()
         testing_data = data.get_testing_data()
+        testing_target = data.get_testing_target()
         model = self.pm.load(self.selections.model_name, PathType.MODEL)
         
         if self.selections.ft_name != "":
@@ -64,7 +66,7 @@ class TufInterface:
         model.fit(training_data, training_target)
         result_arr = model.predict(testing_data)
         self.rm.add_result(self.selections, result_arr, model_path)
-        return result_arr
+        return (result_arr, testing_target, model.predict_prob(testing_data), model.get_classes())
 
     # will be executed when run test button is pressed
     def run(self):
@@ -108,7 +110,7 @@ if __name__ == "__main__":
 
 
     print(ti.get_entries(PathType.MODEL))
-    ti.remove("SVC", PathType.MODEL)
+    # ti.remove("GNB", PathType.MODEL)
     print(ti.get_entries(PathType.MODEL))
 
 
@@ -116,13 +118,21 @@ if __name__ == "__main__":
     print(ti.get_entries(PathType.DATA))
 
 
+    predictions, actual, prob, classes = ti.run()
 
-    ti.run()
-    ti.run()
-    ti.run()
-    print(ti.run())
-    print(ti.run())
-    print(ti.run())
+    print(prob)
+    print(classes)
+    score = Score(predictions, actual, prob, classes)
+    print(score.calculate_accuracy())
+    print(score.calculate_avg_f1())
+    print(score.calculate_avg_precision())
+    print(score.calculate_avg_recall())
+    print(score.confusion_matrix)
+    # ti.run()
+    # ti.run()
+    # print(ti.run())
+    # print(ti.run())
+    # print(ti.run())
 
 
         

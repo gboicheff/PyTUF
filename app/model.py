@@ -13,3 +13,11 @@ class Model(ABC):
     @abstractmethod
     def predict(self, data):
         pass
+
+    @abstractmethod
+    def predict_prob(self, data):
+        pass
+
+    @abstractmethod
+    def get_classes(self, data):
+        pass

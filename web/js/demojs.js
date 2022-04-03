@@ -13,62 +13,112 @@ function htmlload() {
 */
 async function setpath(n) {
     //call python to use tk:
-    newcolfold = await eel.select_path()()
+    let filepath = await eel.select_path()()
 
-    if(n == 1)
+    //prompt for class name:
+    let classname = window.prompt("Enter Class Name", "")
+
+    //call TufInterface.upload()
+    eel.upload_path(classname, filepath, n)()
+
+    
+}
+
+function runtest() {
+
+    let dataname = ""
+    for(opt of document.getElementById("data-select").options)
     {
-        sessionStorage.setItem('curColPath', newcolfold)
-    }
-    else if(n == 2)
-    {
-        sessionStorage.setItem('curExtractPath', newcolfold)
-    }
-    else if(n == 3)
-    {
-        sessionStorage.setItem('curScoringPath', newcolfold)
+        if (opt.selected)
+        {
+            dataname = opt.text
+            break
+        }
     }
 
+    let fextractname = ""
+    for(opt of document.getElementById("feature-extract-select").options)
+    {
+        if (opt.selected)
+        {
+            fextractname = opt.text
+            break
+        }
+    }
+
+    let modelname = ""
+    for(opt of document.getElementById("model-select").options)
+    {
+        if (opt.selected)
+        {
+            modelname = opt.text
+            break
+        }
+    }
+
+    let cacheresults = document.getElementById("cache-check").checked;
+
+    eel.run_test(dataname, fextractname, modelname, cacheresults)()
+}
+
+function removeselect(n) {
+    let selectobj = document.getElementById("data-select")
+    if(n==2)
+    {
+        selectobj = document.getElementById("feature-extract-select")
+    }
+    else if (n==3)
+    {
+        selectobj = document.getElementById("model-select")
+    }
+
+    //loop through elements of select object and remove the selected object
+    let selected = ""
+    for(opt of selectobj.options)
+    {
+        if (opt.selected)
+        {
+            selected = opt.text
+            break
+        }
+        
+    }
+
+    //call python for tufinterface remove:
+    eel.remove_path(selected, n)()
 }
 
 
 document.addEventListener("DOMContentLoaded", async function() {
     
 
-    if(sessionStorage.getItem('curColPath') === null)
-    {
-        sessionStorage.setItem('curColPath', '/collections')
-    }
-    if(sessionStorage.getItem('curExtractPath') === null)
-    {
-        sessionStorage.setItem('curExtractPath', '/collections')
-    }
-    if(sessionStorage.getItem('curScoringPath') === null)
-    {
-        sessionStorage.setItem('curScoringPath', '/collections')
-    }
+    //use ti.get_entries from python for each type and populate select boxes:
+    let data_elems = await eel.get_paths(1)()
+    let fextractor_elems = await eel.get_paths(2)()
+    let model_elems = await eel.get_paths(3)()
 
-    folderelems = await eel.get_folder(sessionStorage.getItem('curColPath'))()
-    folderelems.forEach(elem => {
+
+
+    for(let i = 0; i < data_elems.length; i++)
+    {
         var option = document.createElement("option")
-        option.text = elem
+        option.text = data_elems[i]
         document.getElementById("data-select").add(option)
-    });
+    }
 
-
-    folderelems = await eel.get_folder(sessionStorage.getItem('curExtractPath'))()
-    folderelems.forEach(elem => {
+    for(let i = 0; i < fextractor_elems.length; i++)
+    {
         var option = document.createElement("option")
-        option.text = elem
+        option.text = fextractor_elems[i]
         document.getElementById("feature-extract-select").add(option)
-    });
+    }
 
-
-    folderelems = await eel.get_folder(sessionStorage.getItem('curScoringPath'))()
-    folderelems.forEach(elem => {
+    for(let i = 0; i < model_elems.length; i++)
+    {
         var option = document.createElement("option")
-        option.text = elem
-        document.getElementById("scoring-exclusion-select").add(option)
-    });
+        option.text = model_elems[i]
+        document.getElementById("model-select").add(option)
+    }
 
 
 

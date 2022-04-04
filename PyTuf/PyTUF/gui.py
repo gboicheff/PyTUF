@@ -1,6 +1,6 @@
 import eel
 import os
-from tkinter import filedialog
+from tkinter import filedialog, Tk
 from app.tuf import TufInterface
 from app.paths import PathType
 
@@ -9,6 +9,11 @@ from app.paths import PathType
 
 #initialize tuf object:
 ti = TufInterface()
+
+# fix for file dialog behind the menu window as mentioned here https://stackoverflow.com/questions/31778176/how-do-i-get-tkinter-askopenfilename-to-open-on-top-of-other-windows
+root = Tk()
+root.lift()
+root.withdraw()
 
 # Set web files folder
 eel.init('web')
@@ -30,7 +35,8 @@ def get_folder(foldname):
 
 @eel.expose
 def select_path():
-    filepath = filedialog.askopenfilename(initialdir="/")
+
+    filepath = filedialog.askopenfilename(initialdir="/", filetypes=[("Python File", ".py")])
     #use tuf to add path:
     return filepath
 

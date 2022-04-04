@@ -4,7 +4,7 @@ import numpy as np
 
 class iris(Data):
     def __init__(self):
-        self.data = pd.read_csv("app/data/test/test.csv").to_numpy()
+        self.data = pd.read_csv("test/data/test/test.csv").to_numpy()
         np.random.shuffle(self.data)
         self.training = self.data[50:, :]
         self.testing = self.data[:50, :]

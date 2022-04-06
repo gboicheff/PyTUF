@@ -79,7 +79,7 @@ class PathManager:
     def __init__(self):
         self.p_dict = PathDict()
         # enable this after testing
-        # self.restore_state()
+        self.restore_state()
 
     def __del__(self):
         #self.save_state()
@@ -132,7 +132,7 @@ class PathManager:
 
         
         if ptype == PathType.FEXTRACTOR and not isinstance(obj, FeatureExtractor):
-            raise PMError("Feature Extractor must implement Data class!")
+            raise PMError("Feature Extractor must implement FeatureExtractor class!")
 
         if ptype == PathType.MODEL and not isinstance(obj, Model):
             raise PMError("Model must implement Model class!")

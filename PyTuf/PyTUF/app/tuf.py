@@ -62,7 +62,9 @@ class TufInterface:
         if self.selections.ft_name != "":
             ft = self.pm.load(self.selections.ft_name, PathType.FEXTRACTOR)
             training_data = ft.fit_transform(training_data)
-            testing_data = ft.fit(testing_data)
+            testing_data = ft.transform(testing_data)
+        
+        print(testing_data)
 
         model.fit(training_data, training_target)
         result_arr = model.predict(testing_data)
@@ -71,6 +73,7 @@ class TufInterface:
 
     # will be executed when run test button is pressed
     def run(self):
+        plt.close("all")
         model_path = self.pm.get_path(self.selections.model_name, PathType.MODEL)
         res = None
         if self.selections.use_cache:
@@ -87,6 +90,7 @@ class TufInterface:
         rocs = score.calculate_rocs()
 
         fig, ax = plt.subplots(figsize=(10,7), facecolor=plt.cm.Blues(.2))
+        self.fig = fig
         ax.set_xlabel("FPR Rate")
         ax.set_ylabel("TPR Rate")
         ax.plot([0,1], [0,1])
@@ -113,7 +117,6 @@ class TufInterface:
         ax.set_title("ROC ({}, {})".format(self.selections.data_name, self.selections.model_name), fontsize=14, fontweight='bold')
         fig.tight_layout()
         plt.show()
-
 
 
 

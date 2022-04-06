@@ -60,7 +60,7 @@ class Score:
         for index,c in enumerate(self.classes):
             tprs = []
             fprs = []
-            for thresh in np.linspace(0,1,1000):
+            for thresh in np.linspace(0,1,100):
                 tp = 0
                 fp = 0
                 tn = 0

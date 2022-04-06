@@ -35,7 +35,6 @@ def get_folder(foldname):
 
 @eel.expose
 def select_path():
-
     filepath = filedialog.askopenfilename(initialdir="/", filetypes=[("Python File", ".py")])
     #use tuf to add path:
     return filepath

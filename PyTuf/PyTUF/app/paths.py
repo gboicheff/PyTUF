@@ -152,7 +152,6 @@ class PathManager:
     def get_path(self, name, ptype):
         return self.p_dict.get_path(name, ptype)
 
-    
     def load(self, name, ptype):
         path = self.p_dict.get_path(name, ptype)
         self.check_file(path)

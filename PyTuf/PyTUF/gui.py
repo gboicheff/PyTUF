@@ -35,16 +35,8 @@ def get_folder(foldname):
 
 @eel.expose
 def select_path():
-#     filepath = filedialog.askopenfilename(initialdir="/", filetypes=[("Python File", ".py")])
-# =======
-#     root = Tk()
-#     root.withdraw()
-
-#     root.wm_attributes('-topmost', 1)
-
     filepath = filedialog.askopenfilename(parent=root, initialdir="/", filetypes=[("Python File", ".py")])
     #use tuf to add path:
-    # root.destroy()
     return filepath
 
 @eel.expose

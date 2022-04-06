@@ -15,16 +15,30 @@ async function setpath(n) {
     //call python to use tk:
     let filepath = await eel.select_path()()
 
+    if(filepath == "")
+    {
+        return;
+    }
+
     //prompt for class name:
     let classname = window.prompt("Enter Class Name", "")
 
+    if(classname == null)
+    {
+        return;
+    }
+
     //call TufInterface.upload()
-    eel.upload_path(classname, filepath, n)()
+    let error = await eel.upload_path(classname, filepath, n)()
+    if(error != null)
+    {
+        alert(error)
+    }
 
     
 }
 
-function runtest() {
+async function runtest() {
 
     let dataname = ""
     for(opt of document.getElementById("data-select").options)
@@ -58,10 +72,14 @@ function runtest() {
 
     let cacheresults = document.getElementById("cache-check").checked;
 
-    eel.run_test(dataname, fextractname, modelname, cacheresults)()
+    let error = await eel.run_test(dataname, fextractname, modelname, cacheresults)()
+    if(error != null)
+    {
+        alert(error)
+    }
 }
 
-function removeselect(n) {
+async function removeselect(n) {
     let selectobj = document.getElementById("data-select")
     if(n==2)
     {
@@ -85,9 +103,16 @@ function removeselect(n) {
     }
 
     //call python for tufinterface remove:
-    eel.remove_path(selected, n)()
+    let error = await eel.remove_path(selected, n)()
+    if(error != null)
+    {
+        alert(error)
+    }
 }
 
+function togglecheck() {
+    eel.toggle_check()()
+}
 
 document.addEventListener("DOMContentLoaded", async function() {
     
@@ -96,6 +121,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     let data_elems = await eel.get_paths(1)()
     let fextractor_elems = await eel.get_paths(2)()
     let model_elems = await eel.get_paths(3)()
+    let toggle = await eel.get_toggle()()
 
 
 
@@ -118,6 +144,11 @@ document.addEventListener("DOMContentLoaded", async function() {
         var option = document.createElement("option")
         option.text = model_elems[i]
         document.getElementById("model-select").add(option)
+    }
+
+    if(toggle)
+    {
+        document.getElementById("cache-check").checked = true
     }
 
 

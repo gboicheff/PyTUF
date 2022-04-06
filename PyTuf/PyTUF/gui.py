@@ -2,7 +2,7 @@ import eel
 import os
 from tkinter import filedialog, Tk
 from app.tuf import TufInterface
-from app.paths import PathType
+from app.paths import PathType, PathDictError, PMError
 
 
 #from paths import PathDict, PathType
@@ -12,8 +12,8 @@ ti = TufInterface()
 
 # fix for file dialog behind the menu window as mentioned here https://stackoverflow.com/questions/31778176/how-do-i-get-tkinter-askopenfilename-to-open-on-top-of-other-windows
 root = Tk()
-root.lift()
 root.withdraw()
+root.wm_attributes('-topmost', 1)
 
 # Set web files folder
 eel.init('web')
@@ -35,30 +35,58 @@ def get_folder(foldname):
 
 @eel.expose
 def select_path():
-    filepath = filedialog.askopenfilename(initialdir="/", filetypes=[("Python File", ".py")])
+#     filepath = filedialog.askopenfilename(initialdir="/", filetypes=[("Python File", ".py")])
+# =======
+#     root = Tk()
+#     root.withdraw()
+
+#     root.wm_attributes('-topmost', 1)
+
+    filepath = filedialog.askopenfilename(parent=root, initialdir="/", filetypes=[("Python File", ".py")])
     #use tuf to add path:
+    # root.destroy()
     return filepath
 
 @eel.expose
 def upload_path(name, path, type):
     print(name, "", path, "", type)
 
-    if type == 1:
-        ti.upload(name, path, PathType.DATA)
-    elif type == 2:
-        ti.upload(name, path, PathType.FEXTRACTOR)
-    elif type == 3:
-        ti.upload(name, path, PathType.MODEL)
+    try:
+        if type == 1:
+            ti.upload(name, path, PathType.DATA)
+        elif type == 2:
+            ti.upload(name, path, PathType.FEXTRACTOR)
+        elif type == 3:
+            ti.upload(name, path, PathType.MODEL)
+    except PathDictError as e:
+        #handle
+        if e.val is None:
+            return "PathDictError: " + e.message
+        else:
+            return "PathDictError: " + e.message + " " + e.val
+    except PMError as e:
+        #handle
+        if e.val is None:
+            return "PMError: " + e.message
+        else:
+            return "PMError: " + e.message + " " + e.val
 
 @eel.expose
 def remove_path(name, type):
     print("remove")
-    if type == 1:
-        ti.remove(name, PathType.DATA)
-    elif type == 2:
-        ti.remove(name, PathType.FEXTRACTOR)
-    elif type == 3:
-        ti.remove(name, PathType.MODEL)
+    try:
+        if type == 1:
+            ti.remove(name, PathType.DATA)
+        elif type == 2:
+            ti.remove(name, PathType.FEXTRACTOR)
+        elif type == 3:
+            ti.remove(name, PathType.MODEL)
+    except PathDictError as e:
+        #handle
+        if e.val is None:
+            return "PathDictError: " + e.message
+        else:
+            return "PathDictError: " + e.message + " " + e.val
 
 
 @eel.expose
@@ -82,8 +110,30 @@ def run_test(dataname, fextractname, modelname, cache):
     ti.select(fextractname, PathType.FEXTRACTOR)
     ti.select(modelname, PathType.MODEL)
 
-    print(ti.run())
+    try:
+        ti.run()
+    except PathDictError as e:
+        #handle
+        if e.val is None:
+            return "PathDictError: " + e.message
+        else:
+            return "PathDictError: " + e.message + " " + e.val
+    except PMError as e:
+        #handle
+        if e.val is None:
+            return "PMError: " + e.message
+        else:
+            return "PMError: " + e.message + " " + e.val
 
+
+
+@eel.expose
+def get_toggle():
+    return ti.selections.use_cache
+
+@eel.expose
+def toggle_check():
+    ti.toggle_use_cache()
 
 
 

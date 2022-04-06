@@ -12,14 +12,7 @@ class Score:
         self.probs = probs
         self.mappings = dict([(c, index) for index,c in enumerate(self.classes)])
         self.confusion_matrix = self.calculate_confusion_matrix(predictions, actual)
-        
 
-    # def setup(self, predictions, actual,):
-    #     classes = set(actual)
-    #     self.predictions = predictions
-    #     self.actual = actual
-    #     self.mappings = dict([(c, index) for index,c in enumerate(classes)])
-    #     self.confusion_matrix = self.calculate_confusion_matrix(predictions, actual)
 
     def calculate_confusion_matrix(self, predictions, actual):
         confusion_matrix = np.zeros((len(self.mappings),len(self.mappings)))
@@ -88,12 +81,14 @@ class Score:
             }
         return rocs
 
-    def get_all_metrics(self, num_places):
+    def get_all_metrics(self):
+        num_places = 6
         return {
             "accuracy": round(self.calculate_accuracy(),num_places),
             "f1_score": round(self.calculate_avg_f1(),num_places),
             "avg_precision": round(self.calculate_avg_precision(),num_places),
-            "avg_recall": round(self.calculate_avg_recall(),num_places)
+            "avg_recall": round(self.calculate_avg_recall(),num_places),
+            "rocs": self.calculate_rocs()
         }
             
                 

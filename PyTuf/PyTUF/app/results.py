@@ -41,26 +41,26 @@ class ResultManager:
                 h.update(data)
         return h.hexdigest()
 
-    def add_result(self, selections, result_arr, model_path):
+    def add_score(self, selections, metric_dict, model_path):
         name = self.get_name(selections)
         hash = self.hash_file(model_path)
         d = {
             "hash": hash,
-            "result_arr":str(result_arr.tolist())
+            "metrics": metric_dict,
         }
         json_d = json.dumps(d)
         self.db.set(name, json_d)
 
-    def load_result(self, selections, model_path):
+    def load_score(self, selections, model_path):
         name = self.get_name(selections)
         if self.db.exists(name):
             d = json.loads(self.db.get(name))
-            old_hash, result_arr = d["hash"], d["result_arr"]
-            result_arr = np.array(ast.literal_eval(result_arr))
+            old_hash, metrics = d["hash"], d["metrics"]
+            # result_arr = np.array(ast.literal_eval(result_arr))
             hash = self.hash_file(model_path)
             if old_hash != hash:
                 raise RMError("Model has been modified!", model_path)
-            return result_arr
+            return metrics
         else:
             raise RMError("Result does not exist!", name)
 

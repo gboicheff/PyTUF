@@ -64,30 +64,35 @@ class TufInterface:
             training_data = ft.fit_transform(training_data)
             testing_data = ft.transform(testing_data)
         
-        print(testing_data)
 
         model.fit(training_data, training_target)
         result_arr = model.predict(testing_data)
-        self.rm.add_result(self.selections, result_arr, model_path)
-        return (result_arr, testing_target, model.predict_prob(testing_data), model.get_classes())
+
+        score = Score(result_arr, testing_target, model.predict_prob(testing_data), model.get_classes())
+        metrics = score.get_all_metrics()
+        self.rm.add_score(self.selections, metrics, model_path)
+        return metrics
 
     # will be executed when run test button is pressed
     def run(self):
         plt.close("all")
         model_path = self.pm.get_path(self.selections.model_name, PathType.MODEL)
-        res = None
+        metric_dict = {}
         if self.selections.use_cache:
             try:
-                res = self.rm.load_result(self.selections, model_path)
+                # res = self.rm.load_result(self.selections, model_path)
+                metric_dict = self.rm.load_score(self.selections, model_path)
             except RMError as e:
-                res =  self.train_fit()
+                metric_dict = self.train_fit()
         else:
-            res = self.train_fit()
-        self.score(Score(*res))
+            metric_dict = self.train_fit()
+        self.score(metric_dict)
 
     # do scoring
-    def score(self, score):
-        rocs = score.calculate_rocs()
+    def score(self, metric_dict):
+        rocs = metric_dict["rocs"]
+
+        # rocs = score.calculate_rocs()
 
         fig, ax = plt.subplots(figsize=(10,7), facecolor=plt.cm.Blues(.2))
         self.fig = fig
@@ -102,9 +107,10 @@ class TufInterface:
 
         result_str = ""
 
-        all_metrics = score.get_all_metrics(6)
+        all_metrics = metric_dict
         for metric in all_metrics.keys():
-            result_str += "  {}  :  {}  ".format(metric, all_metrics[metric])
+            if metric != "rocs":
+                result_str += "  {}  :  {}  ".format(metric, all_metrics[metric])
 
         
         ax.annotate(result_str,

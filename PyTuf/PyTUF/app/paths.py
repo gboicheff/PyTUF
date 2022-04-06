@@ -96,9 +96,9 @@ class PathManager:
 
     def check_file(self, path):
         if os.path.splitext(path)[-1].lower() != ".py":
-            raise Exception("File at given path is not a csv file!")
+            raise PMError("File at given path is not a csv file!")
         if not os.path.exists(path):
-            raise Exception("File at given path does not exist!")
+            raise PMError("File at given path does not exist!")
 
     def check_data(self, data):
         if isinstance(data, np.ndarray):

@@ -10,7 +10,6 @@ from app.paths import PathType, PathDictError, PMError
 #initialize tuf object:
 ti = TufInterface()
 
-# fix for file dialog behind the menu window as mentioned here https://stackoverflow.com/questions/31778176/how-do-i-get-tkinter-askopenfilename-to-open-on-top-of-other-windows
 root = Tk()
 root.withdraw()
 root.wm_attributes('-topmost', 1)

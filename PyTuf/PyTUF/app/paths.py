@@ -2,9 +2,9 @@ import pandas as pd
 import os
 import importlib
 import inspect
-from .model import Model
-from .data import Data
-from .feature_extractor import FeatureExtractor
+from .abstract.model import Model
+from .abstract.data import Data
+from .abstract.feature_extractor import FeatureExtractor
 import json
 from pathlib import Path, WindowsPath
 from enum import Enum

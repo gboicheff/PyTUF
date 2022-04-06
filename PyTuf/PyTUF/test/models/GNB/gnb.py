@@ -1,8 +1,8 @@
-from app.model import Model
+from app.abstract.model import ProbModel
 from sklearn.naive_bayes import GaussianNB
 
 
-class GNB(Model):
+class GNB(ProbModel):
     def __init__(self):
         self.model = GaussianNB()
     

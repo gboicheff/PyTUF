@@ -1,4 +1,4 @@
-from app.feature_extractor import FeatureExtractor
+from app.abstract.feature_extractor import FeatureExtractor
 from sklearn.decomposition import PCA
 
 class myPCA(FeatureExtractor):

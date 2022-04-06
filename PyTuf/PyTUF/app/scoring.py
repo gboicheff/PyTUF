@@ -1,7 +1,7 @@
 import numpy as np
-from sklearn import metrics
 #https://towardsdatascience.com/multi-class-metrics-made-simple-part-ii-the-f1-score-ebe8b2c2ca1
 #https://towardsdatascience.com/multi-class-metrics-made-simple-part-i-precision-and-recall-9250280bddc2
+
 class Score:
     def __init__(self, predictions, actual, probs, classes):
         if len(predictions) != len(actual):
@@ -48,28 +48,26 @@ class Score:
     #https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html
     #https://mmuratarat.github.io/2019-10-01/how-to-compute-AUC-plot-ROC-by-hand
     #https://stackoverflow.com/questions/45332410/roc-for-multiclass-classification
+    #https://towardsdatascience.com/comprehensive-guide-on-multiclass-classification-metrics-af94cfb83fbd
     def calculate_rocs(self):
         rocs = {}
         for index,c in enumerate(self.classes):
             tprs = []
             fprs = []
             for thresh in np.linspace(0,1,100):
-                tp = 0
-                fp = 0
-                tn = 0
-                fn = 0
+                tp,fp,tn,fn = 0,0,0,0
                 for prediction, actual, prob in zip(self.predictions, self.actual, self.probs[:, index]):
-                        # above thresh
-                        if prob >= thresh:
-                            if prediction == actual:
-                                tp+=1
-                            else:
-                                fp+=1
+                    # above thresh
+                    if prob >= thresh:
+                        if prediction == actual:
+                            tp+=1
                         else:
-                            if actual == c:
-                                fn+=1
-                            else:
-                                tn+=1
+                            fp+=1
+                    else:
+                        if actual == c:
+                            fn+=1
+                        else:
+                            tn+=1
                 tpr = tp/(tp+fn+1)
                 fpr = fp/(fp+tn+1)
                 # print((thresh, tp, fp, tn, fn))
@@ -83,13 +81,15 @@ class Score:
 
     def get_all_metrics(self):
         num_places = 6
-        return {
+        metric_dict = {
             "accuracy": round(self.calculate_accuracy(),num_places),
-            "f1_score": round(self.calculate_avg_f1(),num_places),
+            "avg_f1_score": round(self.calculate_avg_f1(),num_places),
             "avg_precision": round(self.calculate_avg_precision(),num_places),
             "avg_recall": round(self.calculate_avg_recall(),num_places),
-            "rocs": self.calculate_rocs()
         }
+        if self.probs is not None:
+            metric_dict["rocs"] = self.calculate_rocs()
+        return metric_dict
             
                 
 

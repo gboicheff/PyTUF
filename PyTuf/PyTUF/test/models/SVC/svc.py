@@ -1,4 +1,4 @@
-from app.model import Model
+from app.abstract.model import Model
 from sklearn.svm import SVC as skSVC
 
 

@@ -1,11 +1,6 @@
 from abc import ABC, abstractmethod
 
 class Model(ABC):
-    
-    # @abstractmethod
-    # def fit_predict(data, target):
-    #     pass
-
     @abstractmethod
     def fit(self, data, target):
         pass
@@ -15,9 +10,11 @@ class Model(ABC):
         pass
 
     @abstractmethod
-    def predict_prob(self, data):
+    def get_classes(self, data):
         pass
 
+
+class ProbModel(Model):
     @abstractmethod
-    def get_classes(self, data):
+    def predict_prob(self, data):
         pass

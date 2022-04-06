@@ -1,4 +1,4 @@
-from app.data import Data
+from app.abstract.data import Data
 import pandas as pd
 import numpy as np
 

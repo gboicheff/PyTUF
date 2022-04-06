@@ -11,10 +11,6 @@ import numpy as np
 # def convert_options(options):
 #     return ""
 
-# class Result:
-#     def __init__(self, filename, options, result_arr):
-#         self.name = filename + convert_options(options)
-#         self.result_arr = result_arr
 
 class RMError(Exception):
     def __init__(self, message, val):

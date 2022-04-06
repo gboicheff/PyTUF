@@ -15,66 +15,84 @@
 
   </head>
   <body >
-    <div class="container" id="menu">
+    <div class="container-fluid" id="menu">
         <form>
             <div class="form-group">
               <div class="row">
-                  <div class="col" id="collections">
-                    <label for="collections">Collections</label>
+
+                  <div class="col justify-content-center section" id="collections">
+                    <h3>
+                      <label for="collections">
+                        Data Collections
+                      </label>
+                    </h3>
                     
                     <div class="form-group" id="collections">
-                      <button class="btn btn-primary" onclick="setpath(1)" id = "collectionpathbtn" type="submit">Upload Data</button>
-                      <button class="btn btn-primary btnred" onclick="removeselect(1)" id = "removecollectionbtn" type="submit">Remove Selected</button>
                         <div class="form-row collection-section">
                             <div class="col">
-                                <select class="form-select" multiple aria-label="multiple select example" id="data-select">
+                                <select class="form-select upload-select" multiple id="data-select">
                                     
                                 </select>
                             </div>
+                        </div>
+                        <button class="btn btn-primary btngreen" onclick="setpath(1)" id = "collectionpathbtn" type="submit">Upload</button>
+                        <button class="btn btn-primary btnred" onclick="removeselect(1)" id = "removecollectionbtn" type="submit">Delete</button>
+                      </div>
+                  </div>
+
+                  <div class="col justify-content-center section" id="feature-extraction">
+                    <h3><label for="feature-extraction">Feature Extractors</label></h3>
+                    
+                    <div class="form-group" id="collections">
+                        <div class="form-row collection-section">
+                            <div class="col">
+                                <select class="form-select upload-select" multiple id="feature-extract-select">
+                                    
+                                </select>
+                            </div>
+                            <button class="btn btn-primary btngreen" onclick="setpath(2)" id = "extractionpathbtn" type="submit">Upload</button>
+                            <button class="btn btn-primary btnred" onclick="removeselect(2)" id = "removeextractionbtn" type="submit">Delete</button>
                         </div>
                       </div>
                   </div>
 
 
                   
-                  <div class="col">
-                    <label for="modules">Modules</label>
-                    <div class="form-group" id="modules">
-                        
-
-                        <label class="text-center" for="feature-extraction">Feature Extraction</label>
-                        <div class="row modules-section" id="feature-extraction">
-                          
-                          <div class="form-row">
-                            <button class="btn btn-primary" onclick="setpath(2)" id = "extractionpathbtn" type="submit">Upload Feature Extractor</button>
-                            <button class="btn btn-primary btnred" onclick="removeselect(2)" id = "removeextractionbtn" type="submit">Remove Selected</button>
-                            <div class="row">
-                              <select class="form-select" multiple aria-label="multiple select example" id="feature-extract-select">
-                                
-                              </select>
-                            </div>
+                  <!-- <div class="col justify-content-center section" id="feature-extraction"> 
+                      <h3><label for="feature-extraction">Feature Extractors</label></h3>
+                      <div class="row modules-section" id="feature-extraction">
+                        <div class="form-group" id="collections">
+                        <div class="form-row">
+                          <div class="row">
+                            <select class="form-select" multiple aria-label="multiple select example" id="feature-extract-select">
+                              
+                            </select>
                           </div>
+                          <button class="btn btn-primary" onclick="setpath(2)" id = "extractionpathbtn" type="submit">Upload</button>
+                          <button class="btn btn-primary btnred" onclick="removeselect(2)" id = "removeextractionbtn" type="submit">Remove</button>
                         </div>
+                      </div>
+                      </div>
+                  </div> -->
 
-                        <label class="text-center" for="discrimination">Discrimination</label>
-                        <div class="row modules-section" id="discrimination">
-                          
-                          <div class="col">
-                            <button class="btn btn-primary" onclick="setpath(3)" id = "scoringpathbtn" type="submit">Upload Model</button>
-                            <button class="btn btn-primary btnred" onclick="removeselect(3)" id = "removescoringbtn" type="submit">Remove Selected</button>
-                            <div class="row">
-                              <select class="form-select" multiple aria-label="multiple select example" id="model-select">
-                                
-                              </select>
+                  <div class="col justify-content-center section" id="models">
+                    <h3><label for="models">Classifiers</label></h3>
+                    
+                    <div class="form-group" id="models">
+                        <div class="form-row collection-section">
+                            <div class="col">
+                                <select class="form-select upload-select" multiple id="model-select">
+                                    
+                                </select>
                             </div>
-                          </div>
                         </div>
-
+                        <button class="btn btn-primary btngreen" onclick="setpath(3)" id = "collectionpathbtn" type="submit">Upload</button>
+                        <button class="btn btn-primary btnred" onclick="removeselect(3)" id = "removecollectionbtn" type="submit">Delete</button>
                       </div>
                   </div>
 
 
-                  <div class="col">
+                  <!-- <div class="col">
                     <div class="form-group" id="scoring">
                         <label for="scoring">Scoring</label>
                         <div class="form-row scoring-section" id="scoring-section">
@@ -165,10 +183,25 @@
                           </div>
                         </div>
 
+                      </div>-->
+                  </div>
+                  <div class="row">
+                    <div class="col justify-content-center section" id="scoring">
+                      <h3>
+                        <label for="Scoring">
+                          Scoring
+                        </label>
+                      </h3>
+                      <div class="row justify-content-center section text-center">
+                        <div class="form-check">
+                          <button class="btn btn-primary" onclick = "runtest()" type="submit" id="run-button"><h3>Run</h3></button>
+                          <input type="checkbox" onchange="togglecheck()" id="cache-check">
+                          <label for="cache-check"><h5>Cache Results</h5></label>
+                        </div>
                       </div>
+                    </div>
                   </div>
               </div>
-            </div>
           </form>
     </div>
 

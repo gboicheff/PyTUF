@@ -130,4 +130,4 @@ def toggle_check():
 
 
 
-eel.start('hello.html', size=(1200, 1000), mode='chrome')  # Start
+eel.start('index.html', size=(1200, 1000), mode='chrome')  # Start

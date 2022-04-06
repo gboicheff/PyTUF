@@ -1,40 +1,34 @@
-.collection-section{
-    margin-top: 0.5vh;
-    margin-bottom: 0.5vh;
-}
-
-.modules-section{
-    
-    border-radius: 4px;
-}
-
-#data-select{
-    height: 60vh;
-}
-
-#collection-buttons{
-}
-
-#feature-extract-select{
-    height: 30vh;
-}
-
-#model-exclusion-select{
-    height: 30vh;
-}
-
 .btnred{
     background-color: red;
+    margin: 5px;
 }
 
-#classifier-select{
-    height: 30vh;
+.btngreen{
+    /* background-color: green; */
+    margin: 5px;
 }
 
-#alt-data-select{
-    height: 30vh;
+.section{
+    padding: 10px
 }
+
+.upload-select{
+    height: 65vh;
+    background-color: whitesmoke
+}
+
+#run-button{
+    width: 25%;
+}
+
 
 #menu{
-    margin: 0px;
+    padding: 15px;
+    /* background-color: lightgrey */
+}
+#cache-check{
+    margin: 5px;
+}
+body {
+    background-color: grey
 }

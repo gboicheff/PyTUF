@@ -14,7 +14,8 @@
 
 .upload-select{
     height: 65vh;
-    background-color: whitesmoke
+    background-color: whitesmoke;
+    font-size: 20px;
 }
 
 #run-button{

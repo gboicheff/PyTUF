@@ -1,10 +1,13 @@
+from sklearn import preprocessing
 from app.abstract.model import Model
 from sklearn.svm import SVC as skSVC
+from sklearn.preprocessing import Binarizer
 
 
 class SVC(Model):
     def __init__(self):
         self.model = skSVC(kernel='linear')
+        self.binarizer = preprocessing.LabelBinarizer()
     
     def fit(self, data, target):
         self.model = self.model.fit(data, target)
@@ -13,7 +16,7 @@ class SVC(Model):
         return self.model.predict(data)
     
     def predict_prob(self, data):
-        return self.model.predict_proba(data)
+        return self.binarizer.fit_transform(self.predict(data))
     
     def get_classes(self):
         return self.model.classes_

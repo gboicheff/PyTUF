@@ -1,4 +1,3 @@
-from app.abstract.model import ProbModel
 from .paths import PathType
 from .results import ResultManager, RMError
 from .paths import PathManager
@@ -69,9 +68,7 @@ class TufInterface:
         model.fit(training_data, training_target)
         result_arr = model.predict(testing_data)
 
-        probs = None
-        if isinstance(model, ProbModel):
-            probs = model.predict_prob(testing_data)
+        probs = model.predict_prob(testing_data)
 
         score = Score(result_arr, testing_target, probs, model.get_classes())
         metrics = score.get_all_metrics()

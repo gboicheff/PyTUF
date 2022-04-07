@@ -54,7 +54,7 @@ class Score:
         for index,c in enumerate(self.classes):
             tprs = []
             fprs = []
-            for thresh in np.linspace(0,1,100):
+            for thresh in np.linspace(0,1,20):
                 tp,fp,tn,fn = 0,0,0,0
                 for prediction, actual, prob in zip(self.predictions, self.actual, self.probs[:, index]):
                     # above thresh
@@ -68,9 +68,14 @@ class Score:
                             fn+=1
                         else:
                             tn+=1
-                tpr = tp/(tp+fn+1)
-                fpr = fp/(fp+tn+1)
-                # print((thresh, tp, fp, tn, fn))
+
+                #https://stackoverflow.com/questions/44008563/zero-denominator-in-roc-and-precision-recall
+                tpr = 0.0
+                fpr = 0.0
+                if tp != 0:
+                    tpr = tp/(tp+fn)
+                if fp != 0:
+                    fpr = fp/(fp+tn)
                 tprs.append(tpr)
                 fprs.append(fpr)
             rocs[c] = {

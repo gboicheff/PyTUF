@@ -1,8 +1,8 @@
 from sklearn.tree import DecisionTreeClassifier
-from app.abstract.model import ProbModel
+from app.abstract.model import Model
 
 
-class DecisionTree(ProbModel):
+class DecisionTree(Model):
     def __init__(self):
         self.model = DecisionTreeClassifier()
     

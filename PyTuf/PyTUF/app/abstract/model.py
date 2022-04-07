@@ -12,9 +12,6 @@ class Model(ABC):
     @abstractmethod
     def get_classes(self, data):
         pass
-
-
-class ProbModel(Model):
     @abstractmethod
     def predict_prob(self, data):
         pass

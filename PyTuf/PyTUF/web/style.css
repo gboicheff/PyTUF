@@ -14,7 +14,7 @@
 
 .upload-select{
     height: 65vh;
-    background-color: whitesmoke;
+    background-color: white;
     font-size: 20px;
 }
 
@@ -31,5 +31,5 @@
     margin: 5px;
 }
 body {
-    background-color: grey
+    background-color: #dcdcdc;
 }

@@ -62,7 +62,7 @@ class TufInterface:
         elif self.selections.model_name == "":
             raise Exception("Model must be selected before running")
 
-        data = self.pm.load(self.selections.data_name, PathType.DATA)
+        data = self.pm.load(self.selections.data_name, PathType.DATA)()
 
         try:
             training_data = data.get_training_data()
@@ -75,7 +75,7 @@ class TufInterface:
         model = self.pm.load(self.selections.model_name, PathType.MODEL)
 
         if self.selections.ft_name != "" and self.selections.ft_name != "None":
-            ft = self.pm.load(self.selections.ft_name, PathType.FEXTRACTOR)
+            ft = self.pm.load(self.selections.ft_name, PathType.FEXTRACTOR)()
 
             try:
                 training_data = ft.fit_transform(training_data)
@@ -85,14 +85,16 @@ class TufInterface:
                     "Exception caused by selected feature extractor!", str(e)
                 )
 
-        try:
-            model.fit(training_data, training_target)
-            result_arr = model.predict(testing_data)
-            probs = model.predict_prob(testing_data)
-        except Exception as e:
-            raise PyTUFError("Exception caused by selected classifier!", str(e))
+        # try:
+        #     model.fit(training_data, training_target)
+        #     result_arr = model.predict(testing_data)
+        #     probs = model.predict_prob(testing_data)
+        # except Exception as e:
+        #     raise PyTUFError("Exception caused by selected classifier!", str(e))
 
-        score = Score(result_arr, testing_target, probs, model.get_classes())
+        score = Score(
+            model, training_data, training_target, testing_data, testing_target
+        )
         metrics = score.get_all_metrics()
         self.sm.add_score(self.selections, metrics, model_path)
         return metrics
@@ -103,8 +105,8 @@ class TufInterface:
         model_path = self.pm.get_path(self.selections.model_name, PathType.MODEL)
         metric_dict = {}
         if self.selections.use_cache:
+            # if classifier file changed since last score then recalculate score
             try:
-                # res = self.rm.load_result(self.selections, model_path)
                 metric_dict = self.sm.load_score(self.selections, model_path)
             except SMError as e:
                 metric_dict = self.train_fit()

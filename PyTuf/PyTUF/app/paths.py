@@ -106,7 +106,7 @@ class PathManager:
         spec.loader.exec_module(mod)
         # get dictionary of all classes inside the module
         members = dict(inspect.getmembers(mod))
-        # instantiate the class with the given name and return it
+        # instantiate the class
         try:
             obj = members[name]()
         except Exception as e:
@@ -146,7 +146,7 @@ class PathManager:
         if ptype == PathType.MODEL and not isinstance(obj, Model):
             raise PMError("Model must implement abstract class!")
 
-        return obj
+        return members[name]
 
     def add_path(self, name, ptype, path):
         self.check_file(path)  # check for python file

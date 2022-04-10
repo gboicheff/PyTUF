@@ -1,21 +1,22 @@
 from app.abstract.data import Data
 import pandas as pd
 import numpy as np
-from sklearn.datasets import load_wine
+from sklearn.datasets import load_digits
 from sklearn.model_selection import train_test_split
 
 
-class wine(Data):
+class digits(Data):
     def __init__(self):
-        self.X, self.y = load_wine(return_X_y=True)
+        self.X, self.y = load_digits(return_X_y=True)
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-            self.X, self.y, test_size=0.1, random_state=12
+            self.X, self.y, test_size=0.1, random_state=21
         )
 
     def get_training_data(self):
         return self.X_train
 
     def get_training_target(self):
+        print(self.y_train)
         return self.y_train
 
     def get_testing_data(self):

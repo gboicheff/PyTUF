@@ -66,6 +66,8 @@ def upload_path(name, path, type):
             return "PMError: " + e.message
         else:
             return "PMError: " + e.message + " " + e.val
+    except Exception as e:
+        return str(e)
 
 
 @eel.expose
@@ -84,6 +86,8 @@ def remove_path(name, type):
             return "PathDictError: " + e.message
         else:
             return "PathDictError: " + e.message + " " + e.val
+    except Exception as e:
+        return str(e)
 
 
 @eel.expose
@@ -128,6 +132,8 @@ def run_test(dataname, fextractname, modelname, cache):
             return "PyTUFError: " + e.message
         else:
             return "PyTUFError: " + e.message + " " + e.val
+    # except Exception as e:
+    #     return str(e)
 
 
 @eel.expose

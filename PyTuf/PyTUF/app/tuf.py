@@ -1,8 +1,14 @@
 from .paths import PathType
-from .results import ResultManager, RMError
+from .results import ScoreManager, SMError
 from .paths import PathManager
 from .scoring import *
 import matplotlib.pyplot as plt
+
+class PyTUFError(Exception):
+    def __init__(self, message, val):
+        self.message = message
+        self.val = val
+        super().__init__(self.message)
 
 class Selections:
     def __init__(self):
@@ -14,7 +20,7 @@ class Selections:
 class TufInterface:
     def __init__(self):
         self.pm = PathManager()
-        self.rm = ResultManager()
+        self.sm = ScoreManager()
         self.selections = Selections()
 
     # upload path
@@ -47,32 +53,43 @@ class TufInterface:
 
     def train_fit(self):
         model_path = self.pm.get_path(self.selections.model_name, PathType.MODEL)
+        
         if self.selections.data_name == "":
                 raise Exception("Data must be selected before running")
         elif self.selections.model_name == "":
             raise Exception("Model must be selected before running")
 
+
         data = self.pm.load(self.selections.data_name, PathType.DATA)
-        training_data = data.get_training_data()
-        training_target = data.get_training_target()
-        testing_data = data.get_testing_data()
-        testing_target = data.get_testing_target()
+        try:
+            training_data = data.get_training_data()
+            training_target = data.get_training_target()
+            testing_data = data.get_testing_data()
+            testing_target = data.get_testing_target()
+        except Exception as e:
+            raise PyTUFError("Exception caused by selected data!", str(e))
+        
         model = self.pm.load(self.selections.model_name, PathType.MODEL)
         
         if self.selections.ft_name != "":
             ft = self.pm.load(self.selections.ft_name, PathType.FEXTRACTOR)
-            training_data = ft.fit_transform(training_data)
-            testing_data = ft.transform(testing_data)
+
+            try:
+                training_data = ft.fit_transform(training_data)
+                testing_data = ft.transform(testing_data)
+            except Exception as e:
+                raise PyTUFError("Exception caused by selected feature extractor!", str(e))
         
-
-        model.fit(training_data, training_target)
-        result_arr = model.predict(testing_data)
-
-        probs = model.predict_prob(testing_data)
+        try:
+            model.fit(training_data, training_target)
+            result_arr = model.predict(testing_data)
+            probs = model.predict_prob(testing_data)
+        except Exception as e:
+                raise PyTUFError("Exception caused by selected classifier!", str(e))
 
         score = Score(result_arr, testing_target, probs, model.get_classes())
         metrics = score.get_all_metrics()
-        self.rm.add_score(self.selections, metrics, model_path)
+        self.sm.add_score(self.selections, metrics, model_path)
         return metrics
 
     # will be executed when run test button is pressed
@@ -83,8 +100,8 @@ class TufInterface:
         if self.selections.use_cache:
             try:
                 # res = self.rm.load_result(self.selections, model_path)
-                metric_dict = self.rm.load_score(self.selections, model_path)
-            except RMError as e:
+                metric_dict = self.sm.load_score(self.selections, model_path)
+            except SMError as e:
                 metric_dict = self.train_fit()
         else:
             metric_dict = self.train_fit()
@@ -95,7 +112,7 @@ class TufInterface:
 
         # rocs = score.calculate_rocs()
 
-        fig, ax = plt.subplots(figsize=(10,7), facecolor=plt.cm.Blues(.2))
+        fig, ax = plt.subplots(figsize=(10,7), facecolor="#dcdcdc")
         ax.set_xlabel("FPR Rate")
         ax.set_ylabel("TPR Rate")
         ax.plot([0,1], [0,1])
@@ -103,7 +120,7 @@ class TufInterface:
         if "rocs" in metric_dict:
             rocs = metric_dict["rocs"]
             for c in rocs.keys():
-                ax.plot(rocs[c]["fprs"], rocs[c]["tprs"], label=c)
+                ax.plot(rocs[c]["fprs"], rocs[c]["tprs"], label=c,  marker='o')
                 ax.legend()
 
 

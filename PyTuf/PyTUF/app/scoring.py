@@ -24,14 +24,20 @@ class Score:
         return np.trace(self.confusion_matrix) / len(self.actual)
 
     def calculate_precision(self, c):
+        if self.confusion_matrix[self.mappings[c],self.mappings[c]] == 0:
+            return 0.0
         return self.confusion_matrix[self.mappings[c],self.mappings[c]] / self.confusion_matrix[:,self.mappings[c]].sum()
 
     def calculate_recall(self, c):
+        if self.confusion_matrix[self.mappings[c],self.mappings[c]] == 0:
+            return 0.0
         return self.confusion_matrix[self.mappings[c],self.mappings[c]] / self.confusion_matrix[self.mappings[c],:].sum()
 
     def calculate_f1(self, c):
         precision = self.calculate_precision(c)
         recall = self.calculate_recall(c)
+        if precision * recall == 0:
+            return 0.0
         return (2*precision*recall)/(precision+recall)
 
     def calculate_avg_precision(self):
@@ -41,8 +47,8 @@ class Score:
         return sum(self.calculate_recall(c) for c in self.mappings.keys()) / len(self.mappings.keys())
 
     def calculate_avg_f1(self):
+        # return 2*(self.calculate_avg_precision()*self.calculate_avg_recall()) / ((1 / self.calculate_avg_precision()) + (1 / self.calculate_avg_recall()))
         return sum(self.calculate_f1(c) for c in self.mappings.keys()) / len(self.mappings.keys())
-
 
     #https://github.com/akshaykapoor347/Compute-AUC-ROC-from-scratch-python/blob/master/AUCROCPython.ipynb
     #https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html
@@ -51,14 +57,14 @@ class Score:
     #https://towardsdatascience.com/comprehensive-guide-on-multiclass-classification-metrics-af94cfb83fbd
     def calculate_rocs(self):
         rocs = {}
-        for index,c in enumerate(self.classes):
+        for c in self.classes:
             tprs = []
             fprs = []
-            for thresh in np.linspace(0,1,20):
+            for thresh in np.linspace(0,1,50):
                 tp,fp,tn,fn = 0,0,0,0
-                for prediction, actual, prob in zip(self.predictions, self.actual, self.probs[:, index]):
+                for prediction, actual, prob in zip(self.predictions, self.actual, self.probs[:, self.mappings[c]]):
                     # above thresh
-                    if prob >= thresh:
+                    if prob > thresh:
                         if prediction == actual:
                             tp+=1
                         else:
@@ -78,7 +84,7 @@ class Score:
                     fpr = fp/(fp+tn)
                 tprs.append(tpr)
                 fprs.append(fpr)
-            rocs[c] = {
+            rocs[str(c)] = {
                 "tprs": tprs,
                 "fprs": fprs 
             }
@@ -88,9 +94,9 @@ class Score:
         num_places = 6
         metric_dict = {
             "accuracy": round(self.calculate_accuracy(),num_places),
-            "avg_f1_score": round(self.calculate_avg_f1(),num_places),
-            "avg_precision": round(self.calculate_avg_precision(),num_places),
-            "avg_recall": round(self.calculate_avg_recall(),num_places),
+            "macro_f1_score": round(self.calculate_avg_f1(),num_places),
+            "macro_precision": round(self.calculate_avg_precision(),num_places),
+            "macro_recall": round(self.calculate_avg_recall(),num_places),
         }
         if self.probs is not None:
             metric_dict["rocs"] = self.calculate_rocs()

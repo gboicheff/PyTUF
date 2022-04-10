@@ -6,7 +6,7 @@ from sklearn.preprocessing import Binarizer
 
 class SVC(Model):
     def __init__(self):
-        self.model = skSVC(kernel='linear')
+        self.model = skSVC(kernel="linear", probability=True)
         self.binarizer = preprocessing.LabelBinarizer()
     
     def fit(self, data, target):

@@ -1,4 +1,3 @@
-import pandas as pd
 import os
 import importlib
 import inspect
@@ -6,10 +5,8 @@ from .abstract.model import Model
 from .abstract.data import Data
 from .abstract.feature_extractor import FeatureExtractor
 import json
-from pathlib import Path, WindowsPath
 from enum import Enum
 import pickle
-import ast
 import numpy as np
 
 
@@ -19,10 +16,12 @@ class PathDictError(Exception):
         self.val = val
         super().__init__(self.message)
 
+
 class PathType(Enum):
     DATA = 1
     FEXTRACTOR = 2
     MODEL = 3
+
 
 class PathDict:
     def __init__(self):
@@ -35,16 +34,15 @@ class PathDict:
             raise PathDictError("Name already assigned", self.d[key])
         self.d[key] = path
     
-    def remove_path(self, name:str, ptype: PathType):
+    def remove_path(self, name: str, ptype: PathType):
         key = (name, ptype)
-        if not key in self.d:
+        if key not in self.d:
             raise PathDictError("No path exists", name)
         self.d.pop(key)
         
-
     def get_path(self, name: str, ptype: PathType):
         key = (name, ptype)
-        if not key in self.d:
+        if key not in self.d:
             raise PathDictError("No path exists", name)
         return self.d[key]
 
@@ -81,10 +79,6 @@ class PathManager:
         # enable this after testing
         self.restore_state()
 
-    def __del__(self):
-        #self.save_state()
-        pass
-
     def save_state(self):
         self.p_dict.save_state()
 
@@ -113,34 +107,49 @@ class PathManager:
         # get dictionary of all classes inside the module
         members = dict(inspect.getmembers(mod))
         # instantiate the class with the given name and return it
-        obj = members[name]()
-        if ptype == PathType.DATA:
-            if not isinstance(obj, Data):
-                raise PMError("Data must implement Data class!")
-            if not isinstance(obj.get_all_data(), np.ndarray):
-                raise PMError("get_all_data() does not return numpy matrix")
-            if not isinstance(obj.get_all_target(), np.ndarray):
-                raise PMError("get_all_target() does not return numpy matrix")
-            if not isinstance(obj.get_training_data(), np.ndarray):
-                raise PMError("get_training_data() does not return numpy matrix")
-            if not isinstance(obj.get_testing_data(), np.ndarray):
-                raise PMError("get_testing_data() does not return numpy matrix")
-            if not isinstance(obj.get_training_target(), np.ndarray):
-                raise PMError("get_training_target() does not return numpy matrix")
-            if not isinstance(obj.get_testing_target(), np.ndarray):
-                raise PMError("get_testing_target() does not return numpy matrix")
+        try:
+            obj = members[name]()
+        except Exception as e:
+            error_msg = """Exception occured when instantiating class: {}"""
+            raise PMError(error_msg.format(name), str(e))
 
-        
+        # require data to implement data class and be in numpy matrix format
+        if ptype == PathType.DATA:
+            try:
+                obj.get_all_data()
+                obj.get_all_target()
+                obj.get_training_data()
+                obj.get_testing_data()
+                obj.get_training_target()
+                obj.get_testing_target()
+            except Exception as e:
+                raise PMError("Exception in data class!", str(e))
+            if not isinstance(obj, Data):
+                raise PMError("Data must implement abstract class!")
+            if not isinstance(obj.get_all_data(), np.ndarray):
+                raise PMError("get_all_data does not return numpy matrix")
+            if not isinstance(obj.get_all_target(), np.ndarray):
+                raise PMError("get_all_target does not return numpy matrix")
+            if not isinstance(obj.get_training_data(), np.ndarray):
+                raise PMError("get_training_data does not return numpy matrix")
+            if not isinstance(obj.get_testing_data(), np.ndarray):
+                raise PMError("get_testing_data does not return numpy matrix")
+            if not isinstance(obj.get_training_target(), np.ndarray):
+                raise PMError("get_training_target does not return numpy matrix")
+            if not isinstance(obj.get_testing_target(), np.ndarray):
+                raise PMError("get_testing_target does not return numpy matrix")
+
+        # require feature extractors to implement feature extractor class
         if ptype == PathType.FEXTRACTOR and not isinstance(obj, FeatureExtractor):
-            raise PMError("Feature Extractor must implement FeatureExtractor class!")
+            raise PMError("Feature Extractor must implement abstract class!")
 
         if ptype == PathType.MODEL and not isinstance(obj, Model):
-            raise PMError("Model must implement Model class!")
-
+            raise PMError("Model must implement abstract class!")
 
         return obj
 
     def add_path(self, name, ptype, path):
+        self.check_file(path) # check for python file
         self.get_class(name, path, ptype)
         self.p_dict.add_path(name, ptype, path)
         self.save_state()
@@ -152,14 +161,15 @@ class PathManager:
     def get_path(self, name, ptype):
         return self.p_dict.get_path(name, ptype)
 
+    # dynamically import and instantiate the user created class
     def load(self, name, ptype):
         path = self.p_dict.get_path(name, ptype)
-        self.check_file(path)
         return self.get_class(name, path, ptype)
 
     def get_entries(self, selected_type):
         entries = self.p_dict.get_entries()
-        return [(name, path) for ((name, t), path) in entries if t == selected_type]
+        names_paths = [(name, path) for ((name, t), path) in entries if t == selected_type]
+        return names_paths
 
 
 

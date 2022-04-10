@@ -1,6 +1,7 @@
-from app.abstract.data import Data
 import pandas as pd
 import numpy as np
+from app.abstract.data import Data
+
 
 class iris(Data):
     def __init__(self):
@@ -8,7 +9,6 @@ class iris(Data):
         np.random.shuffle(self.data)
         self.training = self.data[50:, :]
         self.testing = self.data[:50, :]
-
 
     def convert_target(self, target):
         # target_dict = {

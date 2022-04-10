@@ -1,7 +1,7 @@
 import eel
 import os
 from tkinter import filedialog, Tk
-from app.tuf import TufInterface
+from app.tuf import TufInterface, PyTUFError
 from app.paths import PathType, PathDictError, PMError
 
 
@@ -110,6 +110,12 @@ def run_test(dataname, fextractname, modelname, cache):
         else:
             return "PathDictError: " + e.message + " " + e.val
     except PMError as e:
+        #handle
+        if e.val is None:
+            return "PMError: " + e.message
+        else:
+            return "PMError: " + e.message + " " + e.val
+    except PyTUFError as e:
         #handle
         if e.val is None:
             return "PMError: " + e.message

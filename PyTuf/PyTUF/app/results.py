@@ -12,18 +12,23 @@ import numpy as np
 #     return ""
 
 
-class RMError(Exception):
+class SMError(Exception):
+    '''Exception type for errors coming from ScoreManager'''
     def __init__(self, message, val):
         self.message = message
         self.val = val
         super().__init__(self.message)
 
 
-class ResultManager:
+class ScoreManager:
+    '''
+        ScoreManager handles score caching for the application.
+        ScoreManager uses pickledb as a fast temporary store for previous scores.
+    '''
     def __init__(self):
-        self.db = pickledb.load("result.db", False)
-        pass
+        self.database = pickledb.load("result.db", False)
 
+    '''get_name is u'''
     def get_name(self, selections):
         return selections.data_name + "-" + selections.ft_name + "-" + selections.model_name
 
@@ -45,20 +50,20 @@ class ResultManager:
             "metrics": metric_dict,
         }
         json_d = json.dumps(d)
-        self.db.set(name, json_d)
+        self.database.set(name, json_d)
 
     def load_score(self, selections, model_path):
         name = self.get_name(selections)
-        if self.db.exists(name):
-            d = json.loads(self.db.get(name))
+        if self.database.exists(name):
+            d = json.loads(self.database.get(name))
             old_hash, metrics = d["hash"], d["metrics"]
             # result_arr = np.array(ast.literal_eval(result_arr))
             hash = self.hash_file(model_path)
             if old_hash != hash:
-                raise RMError("Model has been modified!", model_path)
+                raise SMError("Model has been modified!", model_path)
             return metrics
         else:
-            raise RMError("Result does not exist!", name)
+            raise SMError("Result does not exist!", name)
 
 
 

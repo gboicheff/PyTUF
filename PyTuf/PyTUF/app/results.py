@@ -4,7 +4,8 @@ import ast
 import json
 import pickledb
 import numpy as np
-#https://github.com/redis/redis-py
+
+# https://github.com/redis/redis-py
 
 
 # this will be used to add option information to the stored result name later
@@ -13,7 +14,8 @@ import numpy as np
 
 
 class SMError(Exception):
-    '''Exception type for errors coming from ScoreManager'''
+    """Exception type for errors coming from ScoreManager"""
+
     def __init__(self, message, val):
         self.message = message
         self.val = val
@@ -21,22 +23,30 @@ class SMError(Exception):
 
 
 class ScoreManager:
-    '''
-        ScoreManager handles score caching for the application.
-        ScoreManager uses pickledb as a fast temporary store for previous scores.
-    '''
+    """
+    ScoreManager handles score caching for the application.
+    ScoreManager uses pickledb as a fast temporary store for previous scores.
+    """
+
     def __init__(self):
         self.database = pickledb.load("result.db", False)
 
-    '''get_name is u'''
+    """get_name is u"""
+
     def get_name(self, selections):
-        return selections.data_name + "-" + selections.ft_name + "-" + selections.model_name
+        return (
+            selections.data_name
+            + "-"
+            + selections.ft_name
+            + "-"
+            + selections.model_name
+        )
 
     def hash_file(self, filename):
         h = hashlib.sha256()
         with open(filename, "r") as file:
             while True:
-                data = file.read(8192).encode('utf-8')
+                data = file.read(8192).encode("utf-8")
                 if not data:
                     break
                 h.update(data)
@@ -66,11 +76,10 @@ class ScoreManager:
             raise SMError("Result does not exist!", name)
 
 
-
 # if __name__ == "__main__":
 #     rm = ResultManager()
 #     result = Result("C:\Dev\PythonEELDemo\gui\gui.py", {}, [1,2,1,3,2,1,0,1,1,2,3])
-    
+
 #     # rm.add_result(result)
 #     # print("test:")
 #     print(rm.load_result("C:\Dev\PythonEELDemo\gui\gui.py", {}))

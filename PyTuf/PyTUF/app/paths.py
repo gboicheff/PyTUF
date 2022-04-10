@@ -33,13 +33,13 @@ class PathDict:
         if key in self.d:
             raise PathDictError("Name already assigned", self.d[key])
         self.d[key] = path
-    
+
     def remove_path(self, name: str, ptype: PathType):
         key = (name, ptype)
         if key not in self.d:
             raise PathDictError("No path exists", name)
         self.d.pop(key)
-        
+
     def get_path(self, name: str, ptype: PathType):
         key = (name, ptype)
         if key not in self.d:
@@ -49,7 +49,7 @@ class PathDict:
     def save_state(self):
         with open(self.STATE_PATH, "wb") as outfile:
             pickle.dump(self.d, outfile)
-    
+
     def load_state(self):
         if os.path.exists(self.STATE_PATH):
             with open(self.STATE_PATH, "rb") as infile:
@@ -60,7 +60,7 @@ class PathDict:
 
     def clear(self):
         self.d = {}
-    
+
     def reset(self):
         self.clear()
         os.remove(self.STATE_PATH)
@@ -149,15 +149,15 @@ class PathManager:
         return obj
 
     def add_path(self, name, ptype, path):
-        self.check_file(path) # check for python file
+        self.check_file(path)  # check for python file
         self.get_class(name, path, ptype)
         self.p_dict.add_path(name, ptype, path)
         self.save_state()
-    
+
     def remove_path(self, name, ptype):
         self.p_dict.remove_path(name, ptype)
         self.save_state()
-    
+
     def get_path(self, name, ptype):
         return self.p_dict.get_path(name, ptype)
 
@@ -168,34 +168,35 @@ class PathManager:
 
     def get_entries(self, selected_type):
         entries = self.p_dict.get_entries()
-        names_paths = [(name, path) for ((name, t), path) in entries if t == selected_type]
+        names_paths = [
+            (name, path) for ((name, t), path) in entries if t == selected_type
+        ]
         return names_paths
-
 
 
 # if __name__ == "__main__":
 
-    # quick pathdict tests
-    # pd = PathDict()
+# quick pathdict tests
+# pd = PathDict()
 
-    # duplicate add error
-    # pd.add_path("test", PathType.MODEL, "test")
-    # pd.add_path("test", PathType.MODEL, "test")
+# duplicate add error
+# pd.add_path("test", PathType.MODEL, "test")
+# pd.add_path("test", PathType.MODEL, "test")
 
-    # duplicate remove error
-    # pd.add_path("test", PathType.MODEL, "test")
-    # pd.remove_path("test", PathType.MODEL)
-    # pd.remove_path("test", PathType.MODEL)
+# duplicate remove error
+# pd.add_path("test", PathType.MODEL, "test")
+# pd.remove_path("test", PathType.MODEL)
+# pd.remove_path("test", PathType.MODEL)
 
-    #nonexistent key error
-    # pd.get_path("bob", PathType.DATA)
-
-
-    #basic functionality
-    # pd.add_path("test", PathType.MODEL, "home/test")
-    # print(pd.get_path("test", PathType.MODEL))
+# nonexistent key error
+# pd.get_path("bob", PathType.DATA)
 
 
-    # quick pm tests
-    # pm = PathManager()
-    # pm.add_path("iris", PathType.DATA, "C:/Users/Grant/Dev/PythonEELDemo/app/data/test/iris.py")
+# basic functionality
+# pd.add_path("test", PathType.MODEL, "home/test")
+# print(pd.get_path("test", PathType.MODEL))
+
+
+# quick pm tests
+# pm = PathManager()
+# pm.add_path("iris", PathType.DATA, "C:/Users/Grant/Dev/PythonEELDemo/app/data/test/iris.py")

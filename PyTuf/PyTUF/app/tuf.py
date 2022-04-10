@@ -4,11 +4,13 @@ from .paths import PathManager
 from .scoring import *
 import matplotlib.pyplot as plt
 
+
 class PyTUFError(Exception):
     def __init__(self, message, val):
         self.message = message
         self.val = val
         super().__init__(self.message)
+
 
 class Selections:
     def __init__(self):
@@ -16,6 +18,7 @@ class Selections:
         self.ft_name = ""
         self.model_name = ""
         self.use_cache = False
+
 
 class TufInterface:
     def __init__(self):
@@ -28,13 +31,12 @@ class TufInterface:
         self.pm.add_path(name, type, path)
 
     # remove path
-    def remove(self, name:str, type: PathType):
+    def remove(self, name: str, type: PathType):
         self.pm.remove_path(name, type)
-    
+
     # get the name:path pairs to be used for the entries in one of the lists
     def get_entries(self, type: PathType):
         return self.pm.get_entries(type)
-
 
     # select data, feature extractor or model
     def select(self, name: str, type: PathType):
@@ -46,19 +48,17 @@ class TufInterface:
             self.selections.model_name = name
         else:
             raise Exception("Invalid type on selected entry!")
-    
+
     def toggle_use_cache(self):
         self.selections.use_cache = not self.selections.use_cache
 
-
     def train_fit(self):
         model_path = self.pm.get_path(self.selections.model_name, PathType.MODEL)
-        
+
         if self.selections.data_name == "":
-                raise Exception("Data must be selected before running")
+            raise Exception("Data must be selected before running")
         elif self.selections.model_name == "":
             raise Exception("Model must be selected before running")
-
 
         data = self.pm.load(self.selections.data_name, PathType.DATA)
         try:
@@ -68,9 +68,9 @@ class TufInterface:
             testing_target = data.get_testing_target()
         except Exception as e:
             raise PyTUFError("Exception caused by selected data!", str(e))
-        
+
         model = self.pm.load(self.selections.model_name, PathType.MODEL)
-        
+
         if self.selections.ft_name != "":
             ft = self.pm.load(self.selections.ft_name, PathType.FEXTRACTOR)
 
@@ -78,14 +78,16 @@ class TufInterface:
                 training_data = ft.fit_transform(training_data)
                 testing_data = ft.transform(testing_data)
             except Exception as e:
-                raise PyTUFError("Exception caused by selected feature extractor!", str(e))
-        
+                raise PyTUFError(
+                    "Exception caused by selected feature extractor!", str(e)
+                )
+
         try:
             model.fit(training_data, training_target)
             result_arr = model.predict(testing_data)
             probs = model.predict_prob(testing_data)
         except Exception as e:
-                raise PyTUFError("Exception caused by selected classifier!", str(e))
+            raise PyTUFError("Exception caused by selected classifier!", str(e))
 
         score = Score(result_arr, testing_target, probs, model.get_classes())
         metrics = score.get_all_metrics()
@@ -112,37 +114,43 @@ class TufInterface:
 
         # rocs = score.calculate_rocs()
 
-        fig, ax = plt.subplots(figsize=(10,7), facecolor="#dcdcdc")
+        fig, ax = plt.subplots(figsize=(10, 7), facecolor="#dcdcdc")
         ax.set_xlabel("FPR Rate")
         ax.set_ylabel("TPR Rate")
-        ax.plot([0,1], [0,1])
+        ax.plot([0, 1], [0, 1])
 
         if "rocs" in metric_dict:
             rocs = metric_dict["rocs"]
             for c in rocs.keys():
-                ax.plot(rocs[c]["fprs"], rocs[c]["tprs"], label=c,  marker='o')
+                ax.plot(rocs[c]["fprs"], rocs[c]["tprs"], label=c, marker="o")
                 ax.legend()
-
 
         result_str = ""
 
         all_metrics = metric_dict
+        entry = "  {}  :  {}  "
         for metric in all_metrics.keys():
             if metric != "rocs":
-                result_str += "  {}  :  {}  ".format(metric, all_metrics[metric])
+                result_str += entry.format(metric, all_metrics[metric])
 
-        
-        ax.annotate(result_str,
-                xy = (0.9, -0.2),
-                xycoords='axes fraction',
-                ha='right',
-                va="center",
-                fontsize=10)
-        
-        ax.set_title("ROC ({}, {})".format(self.selections.data_name, self.selections.model_name), fontsize=14, fontweight='bold')
+        ax.annotate(
+            result_str,
+            xy=(0.9, -0.2),
+            xycoords="axes fraction",
+            ha="right",
+            va="center",
+            fontsize=10,
+        )
+
+        ax.set_title(
+            "ROC ({}, {})".format(
+                self.selections.data_name, self.selections.model_name
+            ),
+            fontsize=14,
+            fontweight="bold",
+        )
         fig.tight_layout()
         plt.show()
-
 
 
 if __name__ == "__main__":
@@ -154,43 +162,31 @@ if __name__ == "__main__":
 
     ti = TufInterface()
 
-
     ti.upload("iris", data_path, PathType.DATA)
 
     ti.upload("GNB", gnb_model_path, PathType.MODEL)
     ti.upload("SVC", svc_model_path, PathType.MODEL)
     ti.upload("DecisionTree", dtree_model_path, PathType.MODEL)
 
-
-
     ti.select("iris", PathType.DATA)
     ti.select("GNB", PathType.MODEL)
-
-
 
     # print(ti.get_entries(PathType.MODEL))
     # # ti.remove("GNB", PathType.MODEL)
     # print(ti.get_entries(PathType.MODEL))
 
-
-
     # print(ti.get_entries(PathType.DATA))
-
 
     ti.run()
 
     # score = Score(predictions, actual, prob, classes)
     # ti.score(score)
 
-
-
-
     # fig = plt.figure()
     # ax = fig.add_subplot()
     # fig.subplots_adjust(top=0.85)
     # fig.suptitle('ROC', fontsize=14, fontweight='bold')
     # ax.set_title('axes title', fontsize=14, fontweight='bold')
-
 
     # print(score.calculate_accuracy())
     # print(score.calculate_avg_f1())
@@ -202,9 +198,3 @@ if __name__ == "__main__":
     # print(ti.run())
     # print(ti.run())
     # print(ti.run())
-
-
-        
-        
-
-    

@@ -52,6 +52,8 @@ class TufInterface:
     def toggle_use_cache(self):
         self.selections.use_cache = not self.selections.use_cache
 
+    # full process of getting data, extracting features(optional) and then fitting the model
+    # all methods called in user written code are wrapped in try catches to prevent errors
     def train_fit(self):
         model_path = self.pm.get_path(self.selections.model_name, PathType.MODEL)
 
@@ -61,6 +63,7 @@ class TufInterface:
             raise Exception("Model must be selected before running")
 
         data = self.pm.load(self.selections.data_name, PathType.DATA)
+
         try:
             training_data = data.get_training_data()
             training_target = data.get_training_target()
@@ -71,7 +74,7 @@ class TufInterface:
 
         model = self.pm.load(self.selections.model_name, PathType.MODEL)
 
-        if self.selections.ft_name != "":
+        if self.selections.ft_name != "" and self.selections.ft_name != "None":
             ft = self.pm.load(self.selections.ft_name, PathType.FEXTRACTOR)
 
             try:
@@ -111,8 +114,6 @@ class TufInterface:
 
     # do scoring
     def score(self, metric_dict):
-
-        # rocs = score.calculate_rocs()
 
         fig, ax = plt.subplots(figsize=(10, 7), facecolor="#dcdcdc")
         ax.set_xlabel("FPR Rate")

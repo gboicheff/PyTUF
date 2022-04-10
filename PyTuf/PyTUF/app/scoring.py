@@ -93,8 +93,7 @@ class Score:
                             tn += 1
 
                 # https://stackoverflow.com/questions/44008563/zero-denominator-in-roc-and-precision-recall
-                tpr = 0.0
-                fpr = 0.0
+                tpr, fpr = 0.0, 0.0
                 if tp != 0:
                     tpr = tp / (tp + fn)
                 if fp != 0:

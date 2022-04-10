@@ -1,64 +1,71 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-    <title>PyTUF</title>
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script type="text/javascript" src = "js/demojs.js"></script>
-    <script type="text/javascript" src = "/eel.js"></script>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+  <title>PyTUF</title>
 
-  </head>
-  <body >
-    <div class="container-fluid" id="menu">
-        <form>
-            <div class="form-group">
-              <div class="row">
+  <script type="text/javascript" src="js/demojs.js"></script>
+  <script type="text/javascript" src="/eel.js"></script>
 
-                  <div class="col justify-content-center section" id="collections">
-                    <h3>
-                      <label for="collections">
-                        Data Collections
-                      </label>
-                    </h3>
-                    
-                    <div class="form-group" id="collections">
-                        <div class="form-row collection-section">
-                            <div class="col">
-                                <select class="form-select upload-select" multiple id="data-select">
-                                    
-                                </select>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary btngreen" onclick="setpath(1)" id = "collectionpathbtn" type="submit">Upload</button>
-                        <button class="btn btn-primary btnred" onclick="removeselect(1)" id = "removecollectionbtn" type="submit">Delete</button>
-                      </div>
-                  </div>
+</head>
 
-                  <div class="col justify-content-center section" id="feature-extraction">
-                    <h3><label for="feature-extraction">Feature Extractors</label></h3>
-                    
-                    <div class="form-group" id="collections">
-                        <div class="form-row collection-section">
-                            <div class="col">
-                                <select class="form-select upload-select" multiple id="feature-extract-select">
-                                    
-                                </select>
-                            </div>
-                            <button class="btn btn-primary btngreen" onclick="setpath(2)" id = "extractionpathbtn" type="submit">Upload</button>
-                            <button class="btn btn-primary btnred" onclick="removeselect(2)" id = "removeextractionbtn" type="submit">Delete</button>
-                        </div>
-                      </div>
-                  </div>
+<body>
+  <div class="container-fluid" id="menu">
+    <form>
+      <div class="form-group">
+        <div class="row">
+
+          <div class="col justify-content-center section" id="collections">
+            <h3>
+              <label for="collections">
+                Data Collections
+              </label>
+            </h3>
+
+            <div class="form-group" id="collections">
+              <div class="form-row collection-section">
+                <div class="col">
+                  <select class="form-select upload-select" multiple id="data-select">
+
+                  </select>
+                </div>
+              </div>
+              <button class="btn btn-primary btngreen" onclick="setpath(1)" id="collectionpathbtn"
+                type="submit">Upload</button>
+              <button class="btn btn-primary btnred" onclick="removeselect(1)" id="removecollectionbtn"
+                type="submit">Delete</button>
+            </div>
+          </div>
+
+          <div class="col justify-content-center section" id="feature-extraction">
+            <h3><label for="feature-extraction">Feature Extractors</label></h3>
+
+            <div class="form-group" id="collections">
+              <div class="form-row collection-section">
+                <div class="col">
+                  <select class="form-select upload-select" multiple id="feature-extract-select">
+
+                  </select>
+                </div>
+                <button class="btn btn-primary btngreen" onclick="setpath(2)" id="extractionpathbtn"
+                  type="submit">Upload</button>
+                <button class="btn btn-primary btnred" onclick="removeselect(2)" id="removeextractionbtn"
+                  type="submit">Delete</button>
+              </div>
+            </div>
+          </div>
 
 
-                  
-                  <!-- <div class="col justify-content-center section" id="feature-extraction"> 
+
+          <!-- <div class="col justify-content-center section" id="feature-extraction"> 
                       <h3><label for="feature-extraction">Feature Extractors</label></h3>
                       <div class="row modules-section" id="feature-extraction">
                         <div class="form-group" id="collections">
@@ -75,24 +82,26 @@
                       </div>
                   </div> -->
 
-                  <div class="col justify-content-center section" id="models">
-                    <h3><label for="models">Classifiers</label></h3>
-                    
-                    <div class="form-group" id="models">
-                        <div class="form-row collection-section">
-                            <div class="col">
-                                <select class="form-select upload-select" multiple id="model-select">
-                                    
-                                </select>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary btngreen" onclick="setpath(3)" id = "collectionpathbtn" type="submit">Upload</button>
-                        <button class="btn btn-primary btnred" onclick="removeselect(3)" id = "removecollectionbtn" type="submit">Delete</button>
-                      </div>
-                  </div>
+          <div class="col justify-content-center section" id="models">
+            <h3><label for="models">Classifiers</label></h3>
+
+            <div class="form-group" id="models">
+              <div class="form-row collection-section">
+                <div class="col">
+                  <select class="form-select upload-select" multiple id="model-select">
+
+                  </select>
+                </div>
+              </div>
+              <button class="btn btn-primary btngreen" onclick="setpath(3)" id="collectionpathbtn"
+                type="submit">Upload</button>
+              <button class="btn btn-primary btnred" onclick="removeselect(3)" id="removecollectionbtn"
+                type="submit">Delete</button>
+            </div>
+          </div>
 
 
-                  <!-- <div class="col">
+          <!-- <div class="col">
                     <div class="form-group" id="scoring">
                         <label for="scoring">Scoring</label>
                         <div class="form-row scoring-section" id="scoring-section">
@@ -184,36 +193,43 @@
                         </div>
 
                       </div>-->
-                  </div>
-                  <div class="row">
-                    <div class="col justify-content-center section" id="scoring">
-                      <h3>
-                        <label for="Scoring">
-                          Scoring
-                        </label>
-                      </h3>
-                      <div class="row justify-content-center section text-center">
-                        <div class="form-check">
-                          <button class="btn btn-primary" onclick = "runtest()" type="submit" id="run-button"><h3>Run</h3></button>
-                          <input type="checkbox" onchange="togglecheck()" id="cache-check">
-                          <label for="cache-check"><h5>Cache Results</h5></label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+        </div>
+        <div class="row">
+          <div class="col justify-content-center section" id="scoring">
+            <h3>
+              <label for="Scoring">
+                Scoring
+              </label>
+            </h3>
+            <div class="row justify-content-center section text-center">
+              <div class="form-check">
+                <button class="btn btn-primary" onclick="runtest()" type="submit" id="run-button">
+                  <h3>Run</h3>
+                </button>
+                <input type="checkbox" onchange="togglecheck()" id="cache-check">
+                <label for="cache-check">
+                  <h5>Cache Results</h5>
+                </label>
               </div>
-          </form>
-    </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 
-    <!-- Optional JavaScript; choose one of the two! -->
+  <!-- Optional JavaScript; choose one of the two! -->
 
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
 
-    <!-- Option 2: Separate Popper and Bootstrap JS -->
-    <!--
+  <!-- Option 2: Separate Popper and Bootstrap JS -->
+  <!--
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
     -->
-  </body>
+</body>
+
 </html>

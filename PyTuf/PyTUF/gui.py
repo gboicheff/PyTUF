@@ -125,9 +125,9 @@ def run_test(dataname, fextractname, modelname, cache):
     except PyTUFError as e:
         # handle
         if e.val is None:
-            return "PMError: " + e.message
+            return "PyTUFError: " + e.message
         else:
-            return "PMError: " + e.message + " " + e.val
+            return "PyTUFError: " + e.message + " " + e.val
 
 
 @eel.expose

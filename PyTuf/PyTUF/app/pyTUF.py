@@ -3,6 +3,7 @@ from .results import ScoreManager, SMError
 from .paths import PathManager
 from .scoring import *
 import matplotlib.pyplot as plt
+import pandas as pd
 
 
 class PyTUFError(Exception):
@@ -20,7 +21,7 @@ class Selections:
         self.use_cache = False
 
 
-class TufInterface:
+class PyTufInterface:
     def __init__(self):
         self.pm = PathManager()
         self.sm = ScoreManager()
@@ -114,7 +115,7 @@ class TufInterface:
             metric_dict = self.train_fit()
         self.score(metric_dict)
 
-    # do scoring
+    # generate matplotlib graph with metrics from score class
     def score(self, metric_dict):
 
         fig, ax = plt.subplots(figsize=(10, 7), facecolor="#dcdcdc")
@@ -125,25 +126,40 @@ class TufInterface:
         if "rocs" in metric_dict:
             rocs = metric_dict["rocs"]
             for c in rocs.keys():
-                ax.plot(rocs[c]["fprs"], rocs[c]["tprs"], label=c, marker="o")
+                ax.plot(rocs[c]["fprs"], rocs[c]["tprs"], label=c)
                 ax.legend()
 
         result_str = ""
 
-        all_metrics = metric_dict
         entry = "  {}  :  {}  "
-        for metric in all_metrics.keys():
+        for metric in metric_dict.keys():
             if metric != "rocs":
-                result_str += entry.format(metric, all_metrics[metric])
+                result_str += entry.format(metric, metric_dict[metric])
 
-        ax.annotate(
-            result_str,
-            xy=(0.9, -0.2),
-            xycoords="axes fraction",
-            ha="right",
-            va="center",
-            fontsize=10,
+        table_data = [
+            (name, value) for name, value in metric_dict.items() if name != "rocs"
+        ]
+        df = pd.DataFrame(dict(table_data), index=[1])
+        ax.table(
+            cellText=df.values,
+            colLabels=df.columns,
+            rowLoc="center",
+            loc="bottom",
+            bbox=[0.0, -0.4, 1, 0.2],
         )
+
+        # columns = [name for name in metric_dict.keys() if name != "rocs"]
+        # values = [value for name,value in metric_dict.items() if name != "rocs"]
+
+        # table = plt.table()
+        # ax.annotate(
+        #     result_str,
+        #     xy=(0.9, -0.2),
+        #     xycoords="axes fraction",
+        #     ha="right",
+        #     va="center",
+        #     fontsize=10,
+        # )
 
         ax.set_title(
             "ROC ({}, {})".format(
@@ -163,7 +179,7 @@ if __name__ == "__main__":
     svc_model_path = "app/models/SVC/svc.py"
     dtree_model_path = "app/models/DecisionTree/dtree.py"
 
-    ti = TufInterface()
+    ti = PyTufInterface()
 
     ti.upload("iris", data_path, PathType.DATA)
 

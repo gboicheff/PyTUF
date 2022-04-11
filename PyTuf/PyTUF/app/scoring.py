@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn import metrics
+import math
 from sklearn.metrics import roc_auc_score
 
 # https://towardsdatascience.com/multi-class-metrics-made-simple-part-ii-the-f1-score-ebe8b2c2ca1
@@ -64,22 +64,74 @@ class Score:
             return 0.0
         return (2 * precision * recall) / (precision + recall)
 
-    def calculate_avg_precision(self):
+    def calculate_macro_precision(self):
         return sum(self.calculate_precision(c) for c in self.mappings.keys()) / len(
             self.mappings.keys()
         )
 
-    def calculate_avg_recall(self):
+    def calculate_macro_recall(self):
         return sum(self.calculate_recall(c) for c in self.mappings.keys()) / len(
             self.mappings.keys()
         )
 
-    def calculate_avg_f1(self):
-        # return 2*(self.calculate_avg_precision()*self.calculate_avg_recall()) / ((1 / self.calculate_avg_precision()) + (1 / self.calculate_avg_recall()))
+    def calculate_macro_f1(self):
         return sum(self.calculate_f1(c) for c in self.mappings.keys()) / len(
             self.mappings.keys()
         )
 
+    def calculate_micro_precision(self):
+        num = 0
+        denom = 0
+        for c in self.classes:
+            num += self.confusion_matrix[self.mappings[c], self.mappings[c]]
+            denom += self.confusion_matrix[:, self.mappings[c]].sum()
+        if num == 0.0:
+            return 0.0
+        else:
+            return num / denom
+
+    def calculate_micro_recall(self):
+        num = 0
+        denom = 0
+        for c in self.classes:
+            num += self.confusion_matrix[self.mappings[c], self.mappings[c]]
+            denom += self.confusion_matrix[self.mappings[c], :].sum()
+        if num == 0.0:
+            return 0.0
+        else:
+            return num / denom
+
+    def calculate_micro_recall(self):
+        num = 0
+        denom = 0
+        for c in self.classes:
+            num += self.confusion_matrix[self.mappings[c], self.mappings[c]]
+            denom += self.confusion_matrix[self.mappings[c], :].sum()
+        if num == 0.0:
+            return 0.0
+        else:
+            return num / denom
+
+    def calculate_micro_f1(self):
+        tp = 0
+        fp = 0
+        fn = 0
+        for c in self.classes:
+            tp += self.confusion_matrix[self.mappings[c], self.mappings[c]]
+            fn += (
+                self.confusion_matrix[self.mappings[c], :].sum()
+                - self.confusion_matrix[self.mappings[c], self.mappings[c]]
+            )
+            fn += (
+                self.confusion_matrix[:, self.mappings[c]].sum()
+                - self.confusion_matrix[self.mappings[c], self.mappings[c]]
+            )
+        if tp == 0.0:
+            return 0.0
+        else:
+            return tp / (tp + (1 / 2) * (fp + fn))
+
+    # convert labels from multiclass to 1 for target label and 0 otherwise
     def binarize_labels(self, labels, selected_label):
         c_labels = np.zeros((len(labels),))
         for index, label in enumerate(labels):
@@ -94,41 +146,42 @@ class Score:
             training_y = self.binarize_labels(self.training_y, current_class)
             self.binary_classifiers[index].fit(self.training_X, training_y)
 
+    # calculate ROC curves for all binary classifiers
     def calculate_binary_rocs(self):
         rocs = {}
         for index, current_class in enumerate(self.classes):
             test_y = self.binarize_labels(self.test_y, current_class)
-            # predictions = self.binary_classifiers[index].predict(self.test_X)
             probs = self.binary_classifiers[index].predict_prob(self.test_X)
-            print(probs)
             tprs, fprs = self.calculate_roc(probs, test_y)
-            auc_score = round(roc_auc_score(test_y, probs[:, 1]), 3)
+            auc_score = round(
+                roc_auc_score(test_y, probs[:, 1]), 3
+            )  # get AUC from sklearn
             rocs["{}(AUC:{})".format(str(current_class), str(auc_score))] = {
                 "tprs": tprs,
                 "fprs": fprs,
             }
         return rocs
 
+    # generate thresholds for the ROC curves based on the minimum value of prob when the probabilties are partitioned into num_thresholds groups
     def find_thresholds(self, probs, num_thresholds):
         sorted_probs = np.sort(probs).tolist()
         num_thresholds = min(num_thresholds, len(sorted_probs))
         window_size = int(len(sorted_probs) / num_thresholds)
-        print(window_size)
-        # thresholds[-1] = 1.0
         thresholds = [
             prob for index, prob in enumerate(sorted_probs) if index % window_size == 0
         ]
         thresholds.insert(0, 0.0)
-        thresholds.append(1.0)
+        thresholds.append(math.nextafter(max(sorted_probs), 2))
         return thresholds
 
+    # calculate a single ROC
     def calculate_roc(self, probs, labels):
         tprs, fprs = [], []
         thresholds = self.find_thresholds(probs[:, 1], 50)
         for thresh in thresholds:
             tp, fp, tn, fn = 0, 0, 0, 0
             for prob, actual in zip(probs[:, 1], labels):
-                if prob > thresh:
+                if prob >= thresh:
                     if actual == 1:
                         tp += 1
                     else:
@@ -154,53 +207,17 @@ class Score:
 
         return tprs, fprs
 
-    # # https://github.com/akshaykapoor347/Compute-AUC-ROC-from-scratch-python/blob/master/AUCROCPython.ipynb
-    # # https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html
-    # # https://mmuratarat.github.io/2019-10-01/how-to-compute-AUC-plot-ROC-by-hand
-    # # https://stackoverflow.com/questions/45332410/roc-for-multiclass-classification
-    # # https://towardsdatascience.com/comprehensive-guide-on-multiclass-classification-metrics-af94cfb83fbd
-    # def calculate_rocs(self):
-    #     rocs = {}
-    #     for c in self.classes:
-    #         tprs = []
-    #         fprs = []
-    #         for thresh in np.linspace(0, 1, 50):
-    #             tp, fp, tn, fn = 0, 0, 0, 0
-    #             for prediction, actual, prob in zip(
-    #                 self.predictions, self.actual, self.probs[:, self.mappings[c]]
-    #             ):
-    #                 # above thresh
-    #                 if prob > thresh:
-    #                     if prediction == actual:
-    #                         tp += 1
-    #                     else:
-    #                         fp += 1
-    #                 else:
-    #                     if actual == c:
-    #                         fn += 1
-    #                     else:
-    #                         tn += 1
-
-    #             # https://stackoverflow.com/questions/44008563/zero-denominator-in-roc-and-precision-recall
-    #             tpr, fpr = 0.0, 0.0
-    #             if tp != 0:
-    #                 tpr = tp / (tp + fn)
-    #             if fp != 0:
-    #                 fpr = fp / (fp + tn)
-    #             tprs.append(tpr)
-    #             fprs.append(fpr)
-    #         rocs[str(c)] = {"tprs": tprs, "fprs": fprs}
-    #     return rocs
-
+    # output all metrics for scoring page
     def get_all_metrics(self):
         num_places = 6
         metric_dict = {
             "accuracy": round(self.calculate_accuracy(), num_places),
-            "macro_f1_score": round(self.calculate_avg_f1(), num_places),
-            "macro_precision": round(self.calculate_avg_precision(), num_places),
-            "macro_recall": round(self.calculate_avg_recall(), num_places),
+            "macro_f1_score": round(self.calculate_macro_f1(), num_places),
+            "macro_precision": round(self.calculate_macro_precision(), num_places),
+            "macro_recall": round(self.calculate_macro_recall(), num_places),
+            "micro_f1": round(self.calculate_micro_f1(), num_places),
+            "micro_precision": round(self.calculate_micro_precision(), num_places),
+            "micro_recall": round(self.calculate_micro_recall(), num_places),
             "rocs": self.calculate_binary_rocs(),
         }
-        # if self.probs is not None:
-        #     metric_dict["rocs"] = self.calculate_rocs()
         return metric_dict

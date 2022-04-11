@@ -1,14 +1,14 @@
 import eel
 import os
 from tkinter import filedialog, Tk
-from app.tuf import TufInterface, PyTUFError
+from app.pyTUF import PyTufInterface, PyTUFError
 from app.paths import PathType, PathDictError, PMError
 
 
 # from paths import PathDict, PathType
 
 # initialize tuf object:
-ti = TufInterface()
+ti = PyTufInterface()
 
 root = Tk()
 root.withdraw()

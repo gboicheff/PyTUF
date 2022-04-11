@@ -4,7 +4,6 @@ import inspect
 from .abstract.model import Model
 from .abstract.data import Data
 from .abstract.feature_extractor import FeatureExtractor
-import json
 from enum import Enum
 import pickle
 import numpy as np
@@ -88,17 +87,15 @@ class PathManager:
     def reset_state(self):
         self.p_dict.reset()
 
+    # check that the target file is a python file
     def check_file(self, path):
         if os.path.splitext(path)[-1].lower() != ".py":
-            raise PMError("File at given path is not a csv file!")
+            raise PMError("File at given path is not a Python file!")
         if not os.path.exists(path):
             raise PMError("File at given path does not exist!")
 
-    def check_data(self, data):
-        if isinstance(data, np.ndarray):
-            return True
-        return False
-
+    # returns the constructor for the class stored at the target path
+    # many exception checks are included to prevent user written code from breaking everything
     def get_class(self, name: str, path: str, ptype: PathType):
         # dynamically load module at target path
         spec = importlib.util.spec_from_file_location(name, path)
@@ -166,6 +163,7 @@ class PathManager:
         path = self.p_dict.get_path(name, ptype)
         return self.get_class(name, path, ptype)
 
+    # get the entries of a target type from the store
     def get_entries(self, selected_type):
         entries = self.p_dict.get_entries()
         names_paths = [

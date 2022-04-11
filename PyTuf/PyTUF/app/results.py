@@ -1,9 +1,6 @@
-import redis
 import hashlib
-import ast
 import json
 import pickledb
-import numpy as np
 
 # https://github.com/redis/redis-py
 
@@ -14,8 +11,6 @@ import numpy as np
 
 
 class SMError(Exception):
-    """Exception type for errors coming from ScoreManager"""
-
     def __init__(self, message, val):
         self.message = message
         self.val = val
@@ -31,8 +26,7 @@ class ScoreManager:
     def __init__(self):
         self.database = pickledb.load("result.db", False)
 
-    """get_name is u"""
-
+    # convert names in 3 selections a unique name used as the key in the K/V store for scores
     def get_name(self, selections):
         return (
             selections.data_name
@@ -42,6 +36,8 @@ class ScoreManager:
             + selections.model_name
         )
 
+    # hash the contents of the target file
+    # used to check for modifications between runs
     def hash_file(self, filename):
         h = hashlib.sha256()
         with open(filename, "r") as file:
@@ -62,6 +58,8 @@ class ScoreManager:
         json_d = json.dumps(d)
         self.database.set(name, json_d)
 
+    # load score for pickleDB
+    # checks for modifictions to the classifier and throws error in that case
     def load_score(self, selections, model_path):
         name = self.get_name(selections)
         if self.database.exists(name):

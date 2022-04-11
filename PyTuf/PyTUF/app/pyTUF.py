@@ -148,22 +148,20 @@ class PyTufInterface:
             bbox=[0.0, -0.4, 1, 0.2],
         )
 
-        # columns = [name for name in metric_dict.keys() if name != "rocs"]
-        # values = [value for name,value in metric_dict.items() if name != "rocs"]
-
-        # table = plt.table()
-        # ax.annotate(
-        #     result_str,
-        #     xy=(0.9, -0.2),
-        #     xycoords="axes fraction",
-        #     ha="right",
-        #     va="center",
-        #     fontsize=10,
-        # )
+        ax.annotate(
+            "Metrics for Multiclass Classifier",
+            xy=(0.65, -0.15),
+            xycoords="axes fraction",
+            ha="right",
+            va="center",
+            fontsize=12,
+        )
 
         ax.set_title(
-            "ROC ({}, {})".format(
-                self.selections.data_name, self.selections.model_name
+            "Individual Binary Classifier ROCs ({}, {}, {})".format(
+                self.selections.data_name,
+                self.selections.ft_name,
+                self.selections.model_name,
             ),
             fontsize=14,
             fontweight="bold",

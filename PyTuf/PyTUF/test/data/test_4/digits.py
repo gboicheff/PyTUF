@@ -16,7 +16,7 @@ class digits(Data):
         return self.X_train
 
     def get_training_target(self):
-        print(self.y_train)
+        # print(self.y_train)
         return self.y_train
 
     def get_testing_data(self):

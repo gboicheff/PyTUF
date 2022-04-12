@@ -30,7 +30,7 @@ def get_folder(foldname):
     if foldname == "/collections":
         foldname = os.getcwd() + "/collections"
     filelist = os.listdir(foldname)
-    print(filelist)
+    # print(filelist)
     return filelist
 
 
@@ -45,7 +45,7 @@ def select_path():
 
 @eel.expose
 def upload_path(name, path, type):
-    print(name, "", path, "", type)
+    # print(name, "", path, "", type)
 
     try:
         if type == 1:
@@ -72,7 +72,7 @@ def upload_path(name, path, type):
 
 @eel.expose
 def remove_path(name, type):
-    print("remove")
+    # print("remove")
     try:
         if type == 1:
             ti.remove(name, PathType.DATA)
@@ -107,7 +107,7 @@ def get_paths(type):
 
 @eel.expose
 def run_test(dataname, fextractname, modelname, cache):
-    print("run attempt:")
+    # print("run attempt:")
     ti.select(dataname, PathType.DATA)
     ti.select(fextractname, PathType.FEXTRACTOR)
     ti.select(modelname, PathType.MODEL)

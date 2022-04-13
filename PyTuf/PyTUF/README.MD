@@ -8,7 +8,7 @@
 
         `from app.abstract.data import Data`
     * The application is **built to work with numpy matrices** so data, feature extractors and classifiers should all output numpy matrices
-1. Install required packages:
+1. Install required packages (pip install -r requirements.txt):
     * numpy
     * pickleDB
     * sklearn

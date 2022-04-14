@@ -11,6 +11,32 @@ function htmlload() {
     
   }
 */
+
+async function updateselect(n) {
+    let selectobj = document.getElementById("data-select")
+    if (n == 2) {
+        selectobj = document.getElementById("feature-extract-select")
+    }
+    else if (n == 3) {
+        selectobj = document.getElementById("model-select")
+    }
+
+    //loop through elements of select object and remove the selected object
+    let selected = ""
+    for (opt of selectobj.options) {
+        if (opt.selected) {
+            selected = opt.text
+            break
+        }
+
+    }
+
+    //call python for tufinterface remove:
+    await eel.update_selection(selected, n)()
+
+}
+
+
 async function setpath(n) {
     //call python to use tk:
     let filepath = await eel.select_path()()
@@ -101,7 +127,6 @@ function togglecheck() {
 
 document.addEventListener("DOMContentLoaded", async function () {
 
-
     //use ti.get_entries from python for each type and populate select boxes:
     let data_elems = await eel.get_paths(1)()
     let fextractor_elems = await eel.get_paths(2)()
@@ -137,7 +162,35 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById("cache-check").checked = true
     }
 
+    //update selected items
+    //get selections from python:
+    let selected = await eel.get_selections()()
+    
+    let selectobj = document.getElementById("data-select")
+    for (opt of selectobj.options) {
+        if (opt.text == selected[0]) {
+            opt.selected = true
+            break
+        }
 
+    }
+    selectobj = document.getElementById("feature-extract-select")
+    for (opt of selectobj.options) {
+        if (opt.text == selected[1]) {
+            opt.selected = true
+            break
+        }
+
+    }
+
+    selectobj = document.getElementById("model-select")
+    for (opt of selectobj.options) {
+        if (opt.text == selected[2]) {
+            opt.selected = true
+            break
+        }
+
+    }
 
     //call python:
 

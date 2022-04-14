@@ -33,7 +33,7 @@
             <div class="form-group" id="collections">
               <div class="form-row collection-section">
                 <div class="col">
-                  <select class="form-select upload-select" multiple id="data-select">
+                  <select class="form-select upload-select" onchange = "updateselect(1)" multiple id="data-select">
 
                   </select>
                 </div>
@@ -51,7 +51,7 @@
             <div class="form-group" id="collections">
               <div class="form-row collection-section">
                 <div class="col">
-                  <select class="form-select upload-select" multiple id="feature-extract-select">
+                  <select class="form-select upload-select" onchange = "updateselect(2)" multiple id="feature-extract-select">
 
                   </select>
                 </div>
@@ -88,7 +88,7 @@
             <div class="form-group" id="models">
               <div class="form-row collection-section">
                 <div class="col">
-                  <select class="form-select upload-select" multiple id="model-select">
+                  <select class="form-select upload-select" onchange = "updateselect(3)" multiple id="model-select">
 
                   </select>
                 </div>

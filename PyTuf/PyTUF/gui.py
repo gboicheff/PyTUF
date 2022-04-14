@@ -30,7 +30,7 @@ def get_folder(foldname):
     if foldname == "/collections":
         foldname = os.getcwd() + "/collections"
     filelist = os.listdir(foldname)
-    # print(filelist)
+    print(filelist)
     return filelist
 
 
@@ -45,7 +45,7 @@ def select_path():
 
 @eel.expose
 def upload_path(name, path, type):
-    # print(name, "", path, "", type)
+    print(name, "", path, "", type)
 
     try:
         if type == 1:
@@ -56,6 +56,7 @@ def upload_path(name, path, type):
             ti.upload(name, path, PathType.MODEL)
     except PathDictError as e:
         # handle
+        print(e.message)
         if e.val is None:
             return "PathDictError: " + e.message
         else:
@@ -72,7 +73,7 @@ def upload_path(name, path, type):
 
 @eel.expose
 def remove_path(name, type):
-    # print("remove")
+    print("remove")
     try:
         if type == 1:
             ti.remove(name, PathType.DATA)
@@ -107,7 +108,7 @@ def get_paths(type):
 
 @eel.expose
 def run_test(dataname, fextractname, modelname, cache):
-    # print("run attempt:")
+    print("run attempt:")
     ti.select(dataname, PathType.DATA)
     ti.select(fextractname, PathType.FEXTRACTOR)
     ti.select(modelname, PathType.MODEL)
@@ -134,6 +135,25 @@ def run_test(dataname, fextractname, modelname, cache):
             return "PyTUFError: " + e.message + " " + e.val
     # except Exception as e:
     #     return str(e)
+
+@eel.expose
+def update_selection(name, type):
+    if type == 1:
+        ti.select(name, PathType.DATA)
+    elif type == 2:
+        ti.select(name, PathType.FEXTRACTOR)
+    elif type == 3:
+        ti.select(name, PathType.MODEL)
+
+@eel.expose
+def get_selections():
+    s = []
+    s.append(ti.selections.data_name) 
+    s.append(ti.selections.ft_name)
+    s.append(ti.selections.model_name)
+
+    return list(s)
+
 
 
 @eel.expose

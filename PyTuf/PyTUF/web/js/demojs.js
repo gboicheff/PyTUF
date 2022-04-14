@@ -39,6 +39,7 @@ async function updateselect(n) {
 
 async function setpath(n) {
     //call python to use tk:
+    
     let filepath = await eel.select_path()()
 
     if (filepath == "") {
@@ -57,6 +58,8 @@ async function setpath(n) {
     if (error != null) {
         alert(error)
     }
+
+    window.location.reload()
 
 
 }
@@ -119,6 +122,8 @@ async function removeselect(n) {
     if (error != null) {
         alert(error)
     }
+
+    window.location.reload()
 }
 
 function togglecheck() {

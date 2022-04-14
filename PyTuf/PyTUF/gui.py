@@ -40,6 +40,7 @@ def select_path():
         parent=root, initialdir="/", filetypes=[("Python File", ".py")]
     )
     # use tuf to add path:
+    print(filepath)
     return filepath
 
 
@@ -50,10 +51,13 @@ def upload_path(name, path, type):
     try:
         if type == 1:
             ti.upload(name, path, PathType.DATA)
+            ti.select(name, PathType.DATA)
         elif type == 2:
             ti.upload(name, path, PathType.FEXTRACTOR)
+            ti.select(name, PathType.FEXTRACTOR)
         elif type == 3:
             ti.upload(name, path, PathType.MODEL)
+            ti.select(name, PathType.MODEL)
     except PathDictError as e:
         # handle
         print(e.message)
@@ -73,14 +77,17 @@ def upload_path(name, path, type):
 
 @eel.expose
 def remove_path(name, type):
-    print("remove")
+    
     try:
         if type == 1:
             ti.remove(name, PathType.DATA)
+            ti.select("", PathType.DATA)
         elif type == 2:
             ti.remove(name, PathType.FEXTRACTOR)
+            ti.select("", PathType.FEXTRACTOR)
         elif type == 3:
             ti.remove(name, PathType.MODEL)
+            ti.select("", PathType.MODEL)
     except PathDictError as e:
         # handle
         if e.val is None:
